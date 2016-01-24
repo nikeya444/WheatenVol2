@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ua.dp.wheaten.site.root.entities.Product;
+import ua.dp.wheaten.site.root.services.DocumentService;
 import ua.dp.wheaten.site.root.services.IncomingDocumentService;
 import ua.dp.wheaten.site.root.services.ProductService;
 
@@ -19,8 +20,8 @@ import java.util.Map;
 @RequestMapping(value = "incoming")
 public class IncomingDocumentController {
 
-    @Resource(name = "indoc")
-    private IncomingDocumentService incomingDocumentService;
+    @Inject
+    private DocumentService documentService;
     @Inject
     private ProductService productService;
 
