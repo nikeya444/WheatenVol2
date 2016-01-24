@@ -10,9 +10,9 @@ import java.math.BigDecimal;
  * Time: 22:39
  * To change this template use File | Settings | File Templates.
  */
-@MappedSuperclass
-@Access(AccessType.FIELD)
-public abstract class DocumentDetail extends PersistableObjectAudit {
+@Entity
+@Table(name = "DETAILS")
+public class DocumentDetail extends PersistableObjectAudit {
 
     @ManyToOne
     @JoinColumn(name = "PRODUCT_ID")
@@ -26,6 +26,14 @@ public abstract class DocumentDetail extends PersistableObjectAudit {
 
     @Column(name = "SUMM")
     private BigDecimal sum;
+
+    @ManyToOne
+    @JoinColumn(name = "DOCUMENT_ID")
+    private Document document;
+
+    @ManyToOne
+    @JoinColumn(name = "STORAGE_ID")
+    private Storage storage;
 
     @PostLoad
     private void populatePrice() {
@@ -62,6 +70,22 @@ public abstract class DocumentDetail extends PersistableObjectAudit {
 
     public void setSum(BigDecimal sum) {
         this.sum = sum;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
+    }
+
+    public Storage getStorage() {
+        return storage;
+    }
+
+    public void setStorage(Storage storage) {
+        this.storage = storage;
     }
 
     @Override

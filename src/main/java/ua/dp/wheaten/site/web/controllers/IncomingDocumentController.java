@@ -19,7 +19,7 @@ import java.util.Map;
 @RequestMapping(value = "incoming")
 public class IncomingDocumentController {
 
-    @Resource(name = "incomingDocumentServiceImpl")
+    @Resource(name = "indoc")
     private IncomingDocumentService incomingDocumentService;
     @Inject
     private ProductService productService;

@@ -1,7 +1,10 @@
 package ua.dp.wheaten.site.root.entities;
 
 import javax.persistence.*;
+import javax.xml.soap.Detail;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,8 +13,9 @@ import java.util.Date;
  * Time: 22:28
  * To change this template use File | Settings | File Templates.
  */
-@MappedSuperclass
-public abstract class Document extends PersistableObjectAudit {
+@Entity
+@Table(name = "DOCUMENTS")
+public class Document extends PersistableObjectAudit {
 
     @ManyToOne
     @JoinColumn(name = "DOCUMENT_TYPE_ID")
@@ -27,6 +31,9 @@ public abstract class Document extends PersistableObjectAudit {
     @Column(name = "DATE_OF_DOCUMENT")
     @Temporal(TemporalType.DATE)
     private Date dateOfDocument;
+
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<DocumentDetail> details = new ArrayList<>();
 
     public DocumentType getDocumentType() {
         return documentType;
@@ -58,6 +65,14 @@ public abstract class Document extends PersistableObjectAudit {
 
     public void setDateOfDocument(Date dateOfDocument) {
         this.dateOfDocument = dateOfDocument;
+    }
+
+    public List<DocumentDetail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<DocumentDetail> details) {
+        this.details = details;
     }
 
     @Override

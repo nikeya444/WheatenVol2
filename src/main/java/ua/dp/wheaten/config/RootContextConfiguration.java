@@ -43,14 +43,14 @@ public class RootContextConfiguration {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    /*    DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUsername("root");
         dataSource.setPassword("");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/wheaten_vol_2");
-      /*  JndiDataSourceLookup lookup = new JndiDataSourceLookup();
-        return lookup.getDataSource("jdbc/wheaten_vol_2"); */
-        return dataSource;
+        dataSource.setUrl("jdbc:mysql://localhost:3306/wheaten_vol_2");     */
+        JndiDataSourceLookup lookup = new JndiDataSourceLookup();
+        return lookup.getDataSource("jdbc/wheaten_doc_1");
+      //  return dataSource;
     }
 
     @Bean
