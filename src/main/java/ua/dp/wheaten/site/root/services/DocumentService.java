@@ -13,8 +13,7 @@ import java.util.List;
  * Time: 22:23
  * To change this template use File | Settings | File Templates.
  */
-public interface DocumentService<T extends Document, ID extends Serializable>
-                            extends GenericService<T, ID> {
-    List<T> findByType(DocumentType type);
-    void updateStatus(ID id, byte status);
+public interface DocumentService extends GenericService<Document, Integer> {
+    List<Document> findByType(DocumentType type);
+    void updateStatus(Integer id, byte status);
 }
