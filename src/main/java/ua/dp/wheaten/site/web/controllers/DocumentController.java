@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.dp.wheaten.site.root.entities.DocumentType;
 import ua.dp.wheaten.site.root.entities.Product;
 import ua.dp.wheaten.site.root.entities.ProductType;
+import ua.dp.wheaten.site.root.repositories.ProductRepository;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -20,9 +21,9 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "documents")
 public class DocumentController {
-    ;
+
     @Inject
-    private ua.dp.wheaten.site.root.services.ProductService productService;
+    private ProductRepository productService;
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String showAllDocuments(Map<String, Object> model) {
@@ -34,7 +35,7 @@ public class DocumentController {
 
     @RequestMapping(value = "new1", method = RequestMethod.GET)
     public String showDocumentForm(Map<String, Object> model) {
-        List<Product> products = productService.getAll();
+        Iterable<Product> products = productService.findAll();
         model.put("products", products);
 
       //  form.setDetails(detailsForms);

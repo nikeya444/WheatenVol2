@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 import ua.dp.wheaten.site.root.entities.Product;
-import ua.dp.wheaten.site.root.entities.ProductType;
-import ua.dp.wheaten.site.root.services.ProductService;
+import ua.dp.wheaten.site.root.repositories.ProductRepository;
 import ua.dp.wheaten.site.web.formobjects.ProductForm;
 
 import javax.inject.Inject;
@@ -26,11 +25,11 @@ import java.util.Map;
 public class ProductController {
 
     @Inject
-    private ProductService service;
+    private ProductRepository productRepository;
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String showAll(Map<String, Object> model) {
-        model.put("products", service.getAll());
+        model.put("products", productRepository.findAll());
         return "products/list";
     }
 
@@ -43,13 +42,13 @@ public class ProductController {
     @RequestMapping(value = "new", method = RequestMethod.POST)
     public View addNewProduct(ProductForm productForm) {
         Product product = convert(productForm);
-        service.save(product);
+        productRepository.save(product);
         return new RedirectView("list", true, false);
     }
 
     @RequestMapping(value = "edit/{productId}", method = RequestMethod.GET)
     public String showEditForm(@PathVariable Integer productId, Map<String, Object> model) {
-        Product product = service.getOne(productId);
+        Product product = productRepository.findOne(productId);
         ProductForm form = convert(product);
         System.out.println(form);
         model.put("productForm", form);
@@ -58,10 +57,10 @@ public class ProductController {
 
     @RequestMapping(value = "edit/{productId}", method = RequestMethod.POST)
     public View editProduct(@PathVariable Integer productId, ProductForm form) {
-        Product product = service.getOne(productId);
+        Product product = productRepository.findOne(productId);
         product.setName(form.getName());
         product.setDescription( form.getDescription() );
-        service.save(product);
+        productRepository.save(product);
         return new RedirectView("/products/list", true, false);
     }
 
