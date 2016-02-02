@@ -11,8 +11,10 @@ import javax.persistence.Table;
  * Time: 15:12
  * To change this template use File | Settings | File Templates.
  */
-@Entity
+
+/*@Entity
 @Table(name = "DOCUMENT_TYPES")
+*/
 public class DocumentType extends PersistableObject {
 
     @Column(name = "DOCUMENT_TYPE")

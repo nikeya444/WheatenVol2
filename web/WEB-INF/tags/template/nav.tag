@@ -19,12 +19,14 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="false">Заказы <span class="caret"></span> </a>
+                       aria-haspopup="true" aria-expanded="false">Документы<span class="caret"></span> </a>
                     <ul class="dropdown-menu">
-                        <li><a href="<c:url value='/orders/current'/>">Текущие заказы</a> </li>
-                        <li><a href="<c:url value='/orders/new'/>">Новый заказ</a></li>
+                        <li><a href="<c:url value='/documents/orders'/>">Заказы</a> </li>
+                        <li><a href="<c:url value='/documents/outgoing'/>">Исходящие</a></li>
+                        <li><a href="<c:url value='/documents/incoming'/>">Входящие</a></li>
+                        <li><a href="<c:url value='/documents/movement'/>">Перемещения</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Поиск </a> </li>
+                        <li><a href="#">Создать</a> </li>
                     </ul>
                 </li>
                 <li><a href="#"></a></li>

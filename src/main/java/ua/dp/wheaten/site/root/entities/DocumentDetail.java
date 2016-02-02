@@ -35,9 +35,29 @@ public class DocumentDetail extends PersistableObjectAudit {
     @JoinColumn(name = "STORAGE_ID")
     private Storage storage;
 
+    @PrePersist
+    @PreUpdate
+    private void correctDetailDueToDocumentType() {
+        this.document.correctInOutDetail(this);
+    }
+
     @PostLoad
-    private void populatePrice() {
-        price = sum.divide(new BigDecimal(quantity));
+    private void abs() {
+        this.sum = this.sum.abs();
+        this.quantity = Math.abs(this.quantity);
+        this.price = sum.divide(new BigDecimal(this.quantity), 2);
+    }
+
+    void negateSum() {
+        this.setSum(
+                this.getSum().negate()
+        );
+    }
+
+    void negateQuantity() {
+        this.setQuantity(
+                Math.negateExact(
+                        this.getQuantity() ) );
     }
 
     public Product getProduct() {

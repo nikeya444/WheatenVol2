@@ -20,7 +20,7 @@
                 <td><c:out value="${document.id}"/></td>
                 <td><c:out value="${document.documentType}"/></td>
                 <td><c:out value="${document.insertTimestamp}"/></td>
-                <td><c:out value="${document.partner.title}"/></td>
+                <td><c:out value="${document.partner.lastname}"/></td>
                 <table>
                          <tr>
                             <th># партии</th>

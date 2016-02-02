@@ -3,106 +3,149 @@ package ua.dp.wheaten.main;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ua.dp.wheaten.config.RootContextConfiguration;
-import ua.dp.wheaten.site.root.entities.*;
-import ua.dp.wheaten.site.root.repositories.*;
-import ua.dp.wheaten.site.root.services.IncomingDocumentService;
-import ua.dp.wheaten.site.root.services.OutgoingDocumentService;
-import ua.dp.wheaten.site.root.services.impl.OutgoingDocumentServiceImpl;
+import ua.dp.wheaten.site.root.dto.Remnant;
+import ua.dp.wheaten.site.root.entities.Document;
+import ua.dp.wheaten.site.root.entities.DocumentDetail;
+
+
+import ua.dp.wheaten.site.root.entities.Product;
+import ua.dp.wheaten.site.root.repositories.DocumentRepository;
+import ua.dp.wheaten.site.root.repositories.PartnerRepository;
+import ua.dp.wheaten.site.root.repositories.ProductRepository;
+import ua.dp.wheaten.site.root.repositories.StorageRepository;
+import ua.dp.wheaten.site.root.services.DocumentService;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Created by kkm on 19.01.2016.
+ * Created by kkm on 25.01.2016.
  */
 public class Main {
+    static ApplicationContext applicationContext = new AnnotationConfigApplicationContext(RootContextConfiguration.class);
+    static DocumentService documentService = applicationContext.getBean(DocumentService.class);
+    static DocumentRepository documentRepository = applicationContext.getBean(DocumentRepository.class);
+    static ProductRepository productRepository = applicationContext.getBean(ProductRepository.class);
+    static PartnerRepository partnerRepository = applicationContext.getBean(PartnerRepository.class);
+    static StorageRepository storageRepository = applicationContext.getBean(StorageRepository.class);
 
-    static ApplicationContext applicationContext = new AnnotationConfigApplicationContext(RootContextConfiguration.class);;
-    static IncomingDocumentService incomingDocumentService = (IncomingDocumentService) applicationContext.getBean("indoc");
-    static IncomingDocumentRepository incomingDocumentRepository = applicationContext.getBean(IncomingDocumentRepository.class);
-
-    static OutgoingDocumentRepository outgoingDocumentRepository = applicationContext.getBean(OutgoingDocumentRepository.class);
-    static OutgoingDocumentService outgoingDocumentService = applicationContext.getBean(OutgoingDocumentService.class);
 
     public static void main(String[] args) {
-        //saveNewIncomingDocument();
-        //getAllIncomingDocuments();
-        // saveNewOutDocument();
-        updateStatus();
+        //saveNewDocument();
+        //getAllDocuments();
+        //moveOperation();
+        //findDocumentsByProduct();
+        //productQuantitySum();
+        //getAllRemnantsWithStorages();
+        //getAveragePrice();
+        findAllByDateAndStatus();
+
+
+        //System.out.println("EPOCH " + new Ins);
     }
 
-    public static void saveNewIncomingDocument() {
+    static void saveNewDocument() {
+        Document document = new Document();
 
-        IncomingDetail detail1 = new IncomingDetail();
-        detail1.setProduct(applicationContext.getBean(ProductRepository.class).findOne(1));
-        detail1.setSum(new BigDecimal(24000));
-        detail1.setQuantity(120);
-        detail1.setStorageTo(applicationContext.getBean(StorageRepository.class).findOne(2));
+        DocumentDetail cogniac = new DocumentDetail();
+        cogniac.setProduct(productRepository.findOne(2));
+        cogniac.setQuantity(5);
+        cogniac.setSum(new BigDecimal(1400));
+        cogniac.setStorage(storageRepository.findOne(1));
+
+        DocumentDetail vodka = new DocumentDetail();
+        vodka.setProduct(productRepository.findOne(1));
+        vodka.setQuantity(20);
+        vodka.setSum(new BigDecimal(5800));
+        vodka.setStorage(storageRepository.findOne(1));
+
+        document.setDocumentType(Document.Type.SALE);
+        document.setStatus(false);
+        document.setDateOfDocument(LocalDate.now());
+        document.setPartner(partnerRepository.findOne(4));
+        document.addDetail(cogniac);
+        document.addDetail(vodka);
 
 
-    /*    IncomingDetail detail2 = new IncomingDetail();
-        detail2.setProduct(applicationContext.getBean(ProductRepository.class).findOne(2));
-        detail2.setQuantity(100);
-        detail2.setSum(new BigDecimal(18500));
-        detail2.setStorageTo(applicationContext.getBean(StorageRepository.class).findOne(2));
-    */
-
-        IncomingDocument document = new IncomingDocument();
-
-        document.setDateOfDocument(new Date());
-        document.setDocumentType(applicationContext.getBean(DocumentTypeRepository.class).findByType("Покупка"));
-        document.setPartner(applicationContext.getBean(PartnerRepository.class).findOne(1));
-        document.addDetail(detail1);
-    //    document.addDetail(detail2);
-
-        IncomingDocumentService incomingDocumentService = (IncomingDocumentService) applicationContext.getBean("indoc");
-        incomingDocumentService.save(document);
+        documentService.save(document);
     }
 
-    public static void saveNewOutDocument() {
-        Product vodka = applicationContext.getBean(ProductRepository.class).findOne(1);
-        Product cogniac = applicationContext.getBean(ProductRepository.class).findOne(2);
-        Storage toliati = applicationContext.getBean(StorageRepository.class).findOne(2);
-        Partner sechkarev = applicationContext.getBean(PartnerRepository.class).findOne(3);
-        DocumentType sale = applicationContext.getBean(DocumentTypeRepository.class).findOne(2);
-
-
-        OutgoingDetail vodkaDetail = new OutgoingDetail();
-        vodkaDetail.setProduct(vodka);
-        vodkaDetail.setQuantity(25);
-        vodkaDetail.setSum(new BigDecimal(7000));
-        vodkaDetail.setStorageFrom(toliati);
-
-        OutgoingDetail cogniacDetail = new OutgoingDetail();
-        cogniacDetail.setProduct(cogniac);
-        cogniacDetail.setSum(new BigDecimal(2025));
-        cogniacDetail.setQuantity(9);
-        cogniacDetail.setStorageFrom(toliati);
-
-        OutgoingDocument document = new OutgoingDocument();
-        document.setDateOfDocument(new Date());
-        document.setPartner(sechkarev);
-        document.setDocumentType(sale);
-
-        document.addDetail(vodkaDetail);
-        document.addDetail(cogniacDetail);
-
-        outgoingDocumentService.save(document);
+    static void getAllDocuments() {
+        List<Document> documents = documentRepository.findAllByStatusAndDateOfDocumentBetween(true, LocalDate.now(), LocalDate.now().plusDays(2));
+        System.out.println(documents.size());
+        for (Document document: documents) {
+            System.out.println(document.getDetails().size());
+        }
     }
 
-    public static void updateStatus() {
+    static void moveOperation() {
+        Document from = documentRepository.findOne(1);
 
-     //   incomingDocumentService.updateStatus(7, (byte) 1);
-        outgoingDocumentService.updateStatus(1, (byte) 1);
+        Document move = new Document();
+        move.setPartner(partnerRepository.findOne(5));
+        move.setDateOfDocument(LocalDate.now());
+        move.setDocumentType(Document.Type.MOVEMENT);
+        move.setStatus(false);
 
+        DocumentDetail out = new DocumentDetail();
+        DocumentDetail in = new DocumentDetail();
+
+        out.setProduct(from.getDetails().get(0).getProduct());
+        in.setProduct(from.getDetails().get(0).getProduct());
+
+        out.setQuantity(70);
+        in.setQuantity(70);
+
+        out.setStorage(from.getDetails().get(0).getStorage());
+        in.setStorage(storageRepository.findOne(2));
+
+        out.setSum(from.getDetails().get(0).getSum().divide(new BigDecimal(100), 2).multiply(new BigDecimal(70)));
+        in.setSum(from.getDetails().get(0).getSum().divide(new BigDecimal(100), 2).multiply(new BigDecimal(70)));
+
+        move.addDetail(out);
+        move.addDetail(in);
+
+        documentRepository.save(move);
     }
 
-    public static void getAllIncomingDocuments() {
-        List<IncomingDocument> documents;
-      //  documents = incomingDocumentService.getAll();
-        documents = incomingDocumentRepository.findAllPosted((byte) 1);
-        System.out.println("Documents size: " + documents.size());
+    static void findDocumentsByProduct() {
+        Product product = productRepository.findOne(1);
+        List<Document> documents = documentRepository.findByDetailsProduct(product);
+        System.out.println(documents.size());
+    }
+
+    static void productQuantitySum() {
+        Product vodka = productRepository.findOne(1);
+        BigDecimal sum = documentRepository.findTotalQuantityOfProduct(vodka);
+        System.out.println(sum);
+    }
+
+    static void getAllRemnants() {
+        List<Remnant> remnants = documentRepository.getAllProductRemnants();
+        for (Remnant remnant: remnants) {
+            System.out.println(remnant.getProduct() + " = " + remnant.getQuantity());
+        }
+    }
+
+    static void getAllRemnantsWithStorages() {
+        List<Remnant> remnants = documentRepository.getAllProductRemnantsInStorages();
+        for (Remnant remnant: remnants) {
+            System.out.println(remnant.getProduct().getName() + " " + remnant.getStorage().getName() + " " + " = " + remnant.getQuantity());
+        }
+    }
+
+    static void getAveragePrice() {
+        BigDecimal result = documentRepository.calculateAveragePrice(productRepository.findOne(1), Document.Type.SALE);
+        System.out.println(result);
+    }
+
+    static void findAllByDateAndStatus() {
+        LocalDate localDate = LocalDate.now();
+        LocalDate from = LocalDate.of(localDate.getYear(), localDate.getMonth().minus(1), 1);
+        LocalDate to = LocalDate.of(localDate.getYear(), localDate.getMonth().minus(1), localDate.getMonth().minus(1).maxLength());
+        List<Document> documents = documentRepository.findAllByDateBetween(from, to);
         System.out.println(documents);
     }
+
 }

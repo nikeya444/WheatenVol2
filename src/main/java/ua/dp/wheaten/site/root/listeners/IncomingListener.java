@@ -2,11 +2,9 @@ package ua.dp.wheaten.site.root.listeners;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-import ua.dp.wheaten.site.root.entities.IncomingDetail;
-import ua.dp.wheaten.site.root.entities.IncomingDocument;
-import ua.dp.wheaten.site.root.entities.Operation;
+
 import ua.dp.wheaten.site.root.helpers.AutowireHelper;
-import ua.dp.wheaten.site.root.services.OperationService;
+
 
 import javax.inject.Inject;
 import javax.persistence.PersistenceContext;

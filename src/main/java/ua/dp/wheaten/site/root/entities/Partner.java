@@ -1,7 +1,7 @@
 package ua.dp.wheaten.site.root.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import ua.dp.wheaten.site.web.jackson.DomainObjectDeserializer;
+
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -20,7 +20,6 @@ import java.util.Set;
 @Entity
 @NamedQuery(name = "Partner.getOne", query = "select p from Partner p where p.id = :id")
 @Table(name = "PARTNERS")
-@JsonDeserialize(using = DomainObjectDeserializer.class)
 public class Partner extends PersistableObjectAudit {
 
     @Column(name = "FIRSTNAME")
@@ -32,12 +31,6 @@ public class Partner extends PersistableObjectAudit {
 
     @OneToMany(mappedBy = "partner", fetch = FetchType.EAGER)
     private List<Phone> phones = new LinkedList<>();
-
-    @ManyToMany
-    @JoinTable(name = "COMPANY_DELIVERY_ADDRESSES",
-            joinColumns = @JoinColumn(name = "PARTNER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "DELIVERY_DEPARTMENT_ID"))
-    private List<DeliveryDepartment> deliveryDepartments = new LinkedList<>();
 
     public Partner() {
     }
@@ -76,14 +69,6 @@ public class Partner extends PersistableObjectAudit {
 
     public void addPhone(Phone phone) {
         this.phones.add(phone);
-    }
-
-    public List<DeliveryDepartment> getDeliveryDepartments() {
-        return deliveryDepartments;
-    }
-
-    public void setDeliveryDepartments(List<DeliveryDepartment> deliveryDepartments) {
-        this.deliveryDepartments = deliveryDepartments;
     }
 
     @Override

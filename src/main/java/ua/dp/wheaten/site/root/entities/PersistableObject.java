@@ -1,7 +1,7 @@
 package ua.dp.wheaten.site.root.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import ua.dp.wheaten.site.web.jackson.DomainObjectDeserializer;
+
 
 import javax.persistence.*;
 
@@ -13,7 +13,6 @@ import javax.persistence.*;
  * To change this template use File | Settings | File Templates.
  */
 @MappedSuperclass
-@JsonDeserialize(using = DomainObjectDeserializer.class)
 public abstract class PersistableObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

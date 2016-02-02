@@ -9,7 +9,7 @@ import ua.dp.wheaten.site.root.entities.DocumentType;
  * Date: 15.09.15
  * Time: 14:50
  * To change this template use File | Settings | File Templates.
- */
+ */      /*
 public interface DocumentTypeRepository extends CrudRepository<DocumentType, Integer> {
     DocumentType findByType(String type);
-}
+} */

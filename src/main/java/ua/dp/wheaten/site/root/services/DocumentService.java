@@ -15,5 +15,9 @@ import java.util.List;
  */
 public interface DocumentService extends GenericService<Document, Integer> {
     List<Document> findByType(DocumentType type);
-    void updateStatus(Integer id, byte status);
+    void updateStatus(Integer id, boolean status);
+    List<Document> findIncomingDocuments(boolean status);
+    List<Document> findOutgoingDocuments(boolean status);
+    List<Document> findMovementDocuments(boolean status);
+
 }

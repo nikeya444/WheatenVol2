@@ -2,6 +2,7 @@ package ua.dp.wheaten.site.root.entities;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -16,8 +17,7 @@ import java.util.Date;
 public class StockBalance extends PersistableObjectAudit {
 
     @Column(name = "BALANCE_DATE")
-    @Temporal(TemporalType.DATE)
-    private Date balanceDate;
+    private LocalDate balanceDate;
 
     @ManyToOne
     @JoinColumn(name = "STORAGE_ID")
@@ -33,11 +33,11 @@ public class StockBalance extends PersistableObjectAudit {
     @Column(name = "SUM")
     private BigDecimal sum;
 
-    public Date getBalanceDate() {
+    public LocalDate getBalanceDate() {
         return balanceDate;
     }
 
-    public void setBalanceDate(Date balanceDate) {
+    public void setBalanceDate(LocalDate balanceDate) {
         this.balanceDate = balanceDate;
     }
 

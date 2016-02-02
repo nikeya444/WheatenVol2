@@ -10,7 +10,7 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ua.dp.wheaten.site.root.entities.Product;
-import ua.dp.wheaten.site.root.repositories.DocumentTypeRepository;
+
 import ua.dp.wheaten.site.root.repositories.PartnerRepository;
 import ua.dp.wheaten.site.root.repositories.ProductRepository;
 import ua.dp.wheaten.site.root.repositories.StorageRepository;
@@ -35,8 +35,7 @@ public abstract class AbstractInegrationTest {
     ProductRepository productRepository;
     @Autowired
     PartnerRepository partnerRepository;
-    @Autowired
-    DocumentTypeRepository documentTypeRepository;
+
 
    // @Before
     public void populateDatabase() {
