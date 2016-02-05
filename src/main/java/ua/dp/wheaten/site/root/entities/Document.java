@@ -1,5 +1,8 @@
 package ua.dp.wheaten.site.root.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -15,6 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "DOCUMENTS")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Document extends PersistableObjectAudit {
 
     public enum Type {
@@ -23,10 +27,12 @@ public class Document extends PersistableObjectAudit {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "DOCUMENT_TYPE")
+    @JsonProperty(value = "documentType")
     private Type documentType;
 
     @ManyToOne
     @JoinColumn(name = "PARTNER_ID")
+    @JsonProperty(value = "partnerId")
     private Partner partner;
 
     @Column(name = "STATUS")
@@ -50,13 +56,20 @@ public class Document extends PersistableObjectAudit {
 
     @PrePersist
     @PreUpdate
+    private void correctDetails() {
+        for (DocumentDetail detail: this.details) {
+            detail.setDocument(this);
+        }
+        this.correctMovementDetails();
+    }
+
     private void correctMovementDetails() {
         if (this.documentType != Type.MOVEMENT) return;
 
         if ( (details.size() % 2) != 0 )
             throw new IllegalArgumentException("details size must be an even number");
 
-         doCorrectMovementDetails(details);
+         this.doCorrectMovementDetails(details);
     }
 
     private void doCorrectMovementDetails(List<DocumentDetail> details) {

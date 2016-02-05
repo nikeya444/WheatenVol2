@@ -2,6 +2,7 @@ package ua.dp.wheaten.site.web.formobjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ua.dp.wheaten.site.root.entities.Document;
 import ua.dp.wheaten.site.root.entities.DocumentType;
 import ua.dp.wheaten.site.root.entities.Partner;
 
@@ -15,28 +16,29 @@ import ua.dp.wheaten.site.root.entities.Partner;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DocumentForm {
 
-    private DocumentType documentType;
+    @JsonProperty(value = "documentType")
+    private String documentType;
 
     @JsonProperty(value = "partnerId")
-    private Partner partner;
+    private Integer partner;
 
   //  private Integer userId;
 
   //  private List<DocumentDetailsForm> details;
 
-    public DocumentType getDocumentType() {
+    public String getDocumentType() {
         return documentType;
     }
 
-    public void setDocumentType(DocumentType documentType) {
+    public void setDocumentType(String documentType) {
         this.documentType = documentType;
     }
 
-    public Partner getPartner() {
+    public Integer getPartner() {
         return partner;
     }
 
-    public void setPartner(Partner partner) {
+    public void setPartner(Integer partner) {
         this.partner = partner;
     }
   /*

@@ -2,11 +2,13 @@ package ua.dp.wheaten.site.web.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 import ua.dp.wheaten.site.root.entities.Partner;
+import ua.dp.wheaten.site.root.entities.Phone;
 import ua.dp.wheaten.site.root.repositories.PartnerRepository;
 import ua.dp.wheaten.site.web.formobjects.PartnerForm;
 
@@ -46,7 +48,16 @@ public class PartnerController {
     public View addNewPartner(PartnerForm form) {
         System.out.println(form.getPhoneForms());
         System.out.println(form.getDeliveryForms());
-
+        Partner partner = new Partner();
+        partner.setFirstname(form.getFirstname());
+        partner.setFathername(form.getFathername());
+        partner.setLastname(form.getLastname());
+        Phone phone = new Phone();
+        phone.setCode(form.getPhoneForms().get(0).getCode());
+        phone.setNumber(form.getPhoneForms().get(0).getNumber());
+        phone.setPartner(partner);
+        partner.addPhone(phone );
+        partnerService.save(partner);
         return new RedirectView("/partners/list", true, false);
     }
 }

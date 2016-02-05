@@ -35,14 +35,15 @@ public class ProductController {
 
     @RequestMapping(value = "new", method = RequestMethod.GET)
     public String showNewProductForm(Map<String, Object> model) {
-        model.put("productForm", new ProductForm());
+        model.put("productForm", new Product());
         return "products/new";
     }
 
     @RequestMapping(value = "new", method = RequestMethod.POST)
-    public View addNewProduct(ProductForm productForm) {
-        Product product = convert(productForm);
-        productRepository.save(product);
+    public View addNewProduct(Product productForm) {
+        //Product product = convert(productForm);
+        //productRepository.save(product);
+        System.out.println(productForm.getId() + " " + productForm.getName()+ " " + productForm.getDescription());
         return new RedirectView("list", true, false);
     }
 

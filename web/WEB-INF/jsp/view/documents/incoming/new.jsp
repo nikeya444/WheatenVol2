@@ -99,18 +99,20 @@
             //   doc['details'] = docDetails;
             docForm["document"] = doc;
             docForm["details"] = docDetails;
-            // alert(JSON.stringify(docForm));
+            alert(JSON.stringify(docForm));
 
             $.ajax({
-                url: "<c:url value='/orders/new'/>",
+                url: "<c:url value='/documents/new1'/>",
                 type: "POST",
                 contentType: 'application/json',
                 data: JSON.stringify(docForm),
+                dataType: "json",
                 success: function(data) {
                     alert(data);
                 },
-                error: function(msg) {
-                    alert(msg);
+                error: function(e) {
+                    console.log("ERROR: ", e);
+                    display(e);
                 }
             });
         }

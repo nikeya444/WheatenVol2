@@ -26,6 +26,12 @@ public class Phone extends PersistableObjectAudit {
     @JoinColumn(name = "PARTNER_ID")
     private Partner partner;
 
+    @PrePersist
+    @PreUpdate
+    private void populateFullnumber() {
+        this.fullNumber = this.code + this.number;
+    }
+
     public String getCode() {
         return code;
     }

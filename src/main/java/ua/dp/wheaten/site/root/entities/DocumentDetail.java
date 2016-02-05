@@ -1,5 +1,8 @@
 package ua.dp.wheaten.site.root.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -12,16 +15,20 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "DETAILS")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DocumentDetail extends PersistableObjectAudit {
 
     @ManyToOne
     @JoinColumn(name = "PRODUCT_ID")
+    @JsonProperty(value = "productId")
     private Product product;
 
     @Column(name = "QUANTITY")
+    @JsonProperty(value = "quantity")
     private Integer quantity;
 
     @Transient
+    @JsonProperty(value = "price")
     private BigDecimal price;
 
     @Column(name = "SUMM")
@@ -38,11 +45,13 @@ public class DocumentDetail extends PersistableObjectAudit {
     @PrePersist
     @PreUpdate
     private void correctDetailDueToDocumentType() {
+        sum = price.multiply(new BigDecimal(quantity));
         this.document.correctInOutDetail(this);
     }
 
     @PostLoad
     private void abs() {
+        if (this.document.getDocumentType() == Document.Type.MOVEMENT) return;
         this.sum = this.sum.abs();
         this.quantity = Math.abs(this.quantity);
         this.price = sum.divide(new BigDecimal(this.quantity), 2);
@@ -111,7 +120,7 @@ public class DocumentDetail extends PersistableObjectAudit {
     @Override
     public String toString() {
         return "DocumentDetail{" +
-                "product=" + product +
+                "product=" + product.getName() +
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", sum=" + sum +

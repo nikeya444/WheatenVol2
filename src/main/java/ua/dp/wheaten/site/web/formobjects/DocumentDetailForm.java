@@ -15,16 +15,16 @@ import ua.dp.wheaten.site.root.entities.ProductType;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DocumentDetailForm implements ValueObject {
     @JsonProperty(value = "productId")
-    private Product product;
+    private Integer product;
     private Integer quantity;
     private Double price;
   //  private BigDecimal sum;
 
-    public Product getProduct() {
+    public Integer getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(Integer product) {
         this.product = product;
     }
 

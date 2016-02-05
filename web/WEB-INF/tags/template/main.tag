@@ -24,6 +24,9 @@
         <link rel="stylesheet"
                 href="<c:url value="/resources/css/styles.css" />">
         <jsp:invoke fragment="headContent" />
+        <script src="<c:url value='/resources/js/jquery-2.1.4.js'/>"></script>
+        <script src="<c:url value='/resources/js/bootstrap.min.js'/> "></script>
+        <script src="<c:url value='/resources/js/selectize.min.js'/>"></script>
     </head>
 
     <body>
@@ -32,9 +35,7 @@
             <h1><c:out value="${fn:trim(bodyTitle)}" /></h1>
             <jsp:invoke fragment="content" />
         </div>
-        <script src="<c:url value='/resources/js/jquery-2.1.4.js'/>"></script>
-        <script src="<c:url value='/resources/js/bootstrap.min.js'/> "></script>
-        <script src="<c:url value='/resources/js/selectize.min.js'/>"></script>
+
         <jsp:invoke fragment="footerContent" />
         <jsp:doBody />
     </body>

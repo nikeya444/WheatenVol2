@@ -1,6 +1,8 @@
 package ua.dp.wheaten.site.root.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import ua.dp.wheaten.site.web.jackson.DomainObjectDeserializer;
 
 
 import javax.persistence.*;
@@ -20,6 +22,8 @@ import java.util.Set;
 @Entity
 @NamedQuery(name = "Partner.getOne", query = "select p from Partner p where p.id = :id")
 @Table(name = "PARTNERS")
+@JsonDeserialize(using = DomainObjectDeserializer.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Partner extends PersistableObjectAudit {
 
     @Column(name = "FIRSTNAME")
@@ -29,7 +33,10 @@ public class Partner extends PersistableObjectAudit {
     @Column(name = "FATHERNAME")
     private String fathername;
 
-    @OneToMany(mappedBy = "partner", fetch = FetchType.EAGER)
+    @Column(name = "FULLNAME")
+    private String fullname;
+
+    @OneToMany(mappedBy = "partner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Phone> phones = new LinkedList<>();
 
     public Partner() {
@@ -59,6 +66,14 @@ public class Partner extends PersistableObjectAudit {
         this.fathername = fathername;
     }
 
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
     public List<Phone> getPhones() {
         return phones;
     }
@@ -69,6 +84,12 @@ public class Partner extends PersistableObjectAudit {
 
     public void addPhone(Phone phone) {
         this.phones.add(phone);
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void populateFullnameField() {
+        this.fullname = this.lastname + " " + this.firstname + " " + this.fathername;
     }
 
     @Override

@@ -19,5 +19,6 @@ public interface DocumentService extends GenericService<Document, Integer> {
     List<Document> findIncomingDocuments(boolean status);
     List<Document> findOutgoingDocuments(boolean status);
     List<Document> findMovementDocuments(boolean status);
+    List<Document> findByDocumentTypeAndStatus(boolean status, Document.Type type);
 
 }

@@ -64,9 +64,19 @@ public class DocumentServiceImpl
 
     @Override
     public List<Document> findMovementDocuments(boolean status) {
-        return this.documentRepository.findAllByStatusAndDocumentTypeIn(
-                true,
-                singletonList(Document.Type.MOVEMENT)
-        );
+        return this.documentRepository
+                .findAllByStatusAndDocumentTypeIn(
+                    true,
+                    singletonList(Document.Type.MOVEMENT)
+                );
+    }
+
+    @Override
+    public List<Document> findByDocumentTypeAndStatus(boolean status, Document.Type type) {
+        return this.documentRepository
+                .findAllByStatusAndDocumentTypeIn(
+                        true,
+                        singletonList(type)
+                );
     }
 }

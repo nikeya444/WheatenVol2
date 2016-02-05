@@ -1,42 +1,52 @@
 
 <template:main htmlTitle="${title}" bodyTitle="${title}">
     <jsp:attribute name="content">
-        <div class="container">
-            <table class="table table-striped table-hover">
-                <tr>
-                    <th>#</th>
-                    <th>Тип документа</th>
-                    <th>Дата создания</th>
-                    <th>Дата документа</th>
-                    <th>Контрагент</th>
-                    <th>Сумма документа</th>
-                </tr>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-1 center-block">#</div>
+                        <div class="col-lg-2 center-block">Тип документа</div>
+                        <div class="col-lg-3 center-block">Дата создания</div>
+                        <div class="col-lg-3 center-block">Дата документа</div>
+                        <div class="col-lg-3 center-block">Контрагент</div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-lg-4 center-block">Товар</div>
+                        <div class="col-lg-2 center-block">Кол.,<br>шт</div>
+                        <div class="col-lg-3 center-block">Сумма</div>
+                        <div class="col-lg-3 center-block">Склад</div>
+                    </div>
+                </div>
+                <div class="col-lg-2">Итого</div>
+            </div>
+            <c:forEach items="${documents}" var="document" varStatus="i">
 
-                <c:forEach items="${documents}" var="document" varStatus="i">
-                    <tr>
-                        <div>
-                            <td><c:out value="${i.index}"/></td>
-                            <td><c:out value="${document.documentType}"/></td>
-                            <td><c:out value="${document.insertTimestamp}"/></td>
-                            <td><c:out value="${document.dateOfDocument}"/></td>
-                            <td><c:out value="${document.partner.lastname}"/></td>
-                            <c:set var="sum" value="0"/>
-                        </div>
-                        <div>
+                <div class="row" style="border-radius: 15px; border: 1px solid #333333; margin-top: 0.5%">
+                     <div class="col-lg-6">
+                         <div class="row">
+                            <div class="col-lg-1 center-block"><c:out value="${i.index}"/></div>
+                            <div class="col-lg-2 center-block"><c:out value="${document.documentType}"/></div>
+                            <div class="col-lg-3 center-block"><c:out value="${document.insertTimestamp}"/></div>
+                            <div class="col-lg-3 center-block"><c:out value="${document.dateOfDocument}"/></div>
+                            <div class="col-lg-3 center-block"><c:out value="${document.partner.lastname}"/></div>
+                         </div>
+                     </div>
+                     <div class="col-lg-4">
+                            <c:set var="sum" value="${0}"/>
                             <c:forEach items="${document.details}" var="detail">
-                                <table>
-                                    <tr>
-                                        <td><c:out value="${detail.product.name}"/></td>
-                                        <td><c:out value="${detail.quantity}"/></td>
-                                        <td><c:out value="${detail.sum}"/></td>
-                                    </tr>
-                                </table>
+                                <div class="row">
+                                    <div class="col-lg-4 center-block"><c:out value="${detail.product.name}"/></div>
+                                    <div class="col-lg-2 center-block"><c:out value="${detail.quantity}"/></div>
+                                    <div class="col-lg-3 center-block"><c:out value="${detail.sum}"/></div>
+                                    <div class="col-lg-3 center-block"><c:out value="${detail.storage.name}"/></div>
+                                </div>
+                            <c:set var="sum" value="${sum + detail.sum}"/>
                             </c:forEach>
-                            <td><c:out value="${sum}"/></td>
-                        </div>
-                    </tr>
+                     </div>
+                     <div class="col-lg-2"><c:out value="${sum}"/></div>
+                </div>
                 </c:forEach>
-            </table>
-        </div>
     </jsp:attribute>
 </template:main>

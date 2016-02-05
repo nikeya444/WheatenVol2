@@ -1,6 +1,11 @@
 package ua.dp.wheaten.site.root.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import ua.dp.wheaten.site.web.jackson.DomainObjectDeserializer;
+
 import javax.persistence.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,6 +16,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "PRODUCT")
+@JsonDeserialize(using = DomainObjectDeserializer.class)
 public class Product extends PersistableObject {
 
     @Column(name = "PRODUCT_NAME")
