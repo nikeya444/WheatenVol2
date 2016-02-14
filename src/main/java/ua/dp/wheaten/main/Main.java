@@ -1,5 +1,6 @@
 package ua.dp.wheaten.main;
 
+import com.mysema.query.BooleanBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ua.dp.wheaten.config.RootContextConfiguration;
@@ -9,14 +10,19 @@ import ua.dp.wheaten.site.root.entities.DocumentDetail;
 
 
 import ua.dp.wheaten.site.root.entities.Product;
+import ua.dp.wheaten.site.root.entities.QDocument;
 import ua.dp.wheaten.site.root.repositories.DocumentRepository;
 import ua.dp.wheaten.site.root.repositories.PartnerRepository;
 import ua.dp.wheaten.site.root.repositories.ProductRepository;
 import ua.dp.wheaten.site.root.repositories.StorageRepository;
 import ua.dp.wheaten.site.root.services.DocumentService;
+import ua.dp.wheaten.site.web.formobjects.DetailCriteria;
+import ua.dp.wheaten.site.web.formobjects.DocumentCriteria;
+import ua.dp.wheaten.site.web.formobjects.SearchCriteria;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,17 +38,46 @@ public class Main {
 
 
     public static void main(String[] args) {
-        //saveNewDocument();
-        //getAllDocuments();
-        //moveOperation();
-        //findDocumentsByProduct();
-        //productQuantitySum();
-        //getAllRemnantsWithStorages();
-        //getAveragePrice();
-        findAllByDateAndStatus();
+        testPredicate();
+    }
 
+    static void predicateGraph() {
+        QDocument qDocument = QDocument.document;
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(qDocument.status.eq(true));
+        builder.and(qDocument.documentType.eq(Document.Type.PURCHASE));
+        List<Document> documents = documentRepository.findAll(builder);
+        System.out.println(documents);
+    }
 
-        //System.out.println("EPOCH " + new Ins);
+    static void testPredicate() {
+        SearchCriteria criteria = new SearchCriteria();
+        DocumentCriteria headCriteria = new DocumentCriteria();
+        headCriteria.setDocumentTypes(Arrays.asList(Document.Type.PURCHASE, Document.Type.SALE));
+        headCriteria.setFrom(LocalDate.of(2016, 1, 26));
+        headCriteria.setTo(LocalDate.of(2016, 2, 7));
+    //    criteria.setDateOfDocument(LocalDate.of(2016, 1, 27));
+        criteria.setDocumentCriteria(headCriteria);
+
+        DetailCriteria detailCriteria = new DetailCriteria();
+        detailCriteria.setStorageIdList(Arrays.asList(1));
+        detailCriteria.setProductIdList(Arrays.asList(2));
+        criteria.setDetailCriteria(detailCriteria);
+        List<Document> documents = documentService.findAllByCriteria(criteria);
+        System.out.println(documents);
+        System.out.println(documents.size());
+    }
+
+    static void findPartnersMap() {
+       // System.out.println(partnerRepository.findAllNames());
+    }
+
+    static void findAllDocuments() {
+        LocalDate now = LocalDate.now();
+        LocalDate from = LocalDate.of(now.getYear(), 1, 1);
+        System.out.println("from " + from + " to " + now);
+        List<Document> documents = documentRepository.findAllByStatusAndDateOfDocumentBetweenAndDocumentTypeIn(true, from, now, Arrays.asList(Document.Type.SALE, Document.Type.PURCHASE));
+        System.out.println(documents);
     }
 
     static void saveNewDocument() {

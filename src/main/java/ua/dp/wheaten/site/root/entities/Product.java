@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "PRODUCT")
 @JsonDeserialize(using = DomainObjectDeserializer.class)
-public class Product extends PersistableObject {
+public class Product extends PersistableObject implements Convertable {
 
     @Column(name = "PRODUCT_NAME")
     private String name;
@@ -51,5 +51,10 @@ public class Product extends PersistableObject {
 
     public void setProductType(ProductType productType) {
         this.productType = productType;
+    }
+
+    @Override
+    public String createStringRepresentation() {
+        return this.getName();
     }
 }

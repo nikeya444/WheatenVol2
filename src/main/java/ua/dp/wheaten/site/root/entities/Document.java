@@ -17,6 +17,9 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
+@NamedEntityGraph(name = "graph.document.details",
+        attributeNodes = @NamedAttributeNode("details")
+)
 @Table(name = "DOCUMENTS")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Document extends PersistableObjectAudit {
@@ -130,7 +133,9 @@ public class Document extends PersistableObjectAudit {
     @Override
     public String toString() {
         return "Document{" +
-                "documentType=" + documentType +
+                "id " + getId() +
+                ", dateOfDocument=" + dateOfDocument +
+                ", documentType=" + documentType +
                 ", partner=" + partner +
                 '}';
     }

@@ -120,7 +120,8 @@ public class DocumentDetail extends PersistableObjectAudit {
     @Override
     public String toString() {
         return "DocumentDetail{" +
-                "product=" + product.getName() +
+                "id=" + getId() +
+                ", product=" + product.getName() +
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", sum=" + sum +

@@ -12,6 +12,14 @@ public class DocumentWrapper {
     private Document document;
     private List<DocumentDetail> details;
 
+    public DocumentWrapper() {
+    }
+
+    public DocumentWrapper(Document document, List<DocumentDetail> details) {
+        this.document = document;
+        this.details = details;
+    }
+
     public Document getDocument() {
         return document;
     }

@@ -14,7 +14,7 @@ public interface GenericService<T, ID extends Serializable> {
 
     public T getOne(ID id);
 
-    public List<T> getAll();
+    public List<T> findAll();
 
     public void save(T object);
 

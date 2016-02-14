@@ -19,14 +19,18 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
+        <script src="<c:url value='/resources/js/jquery-2.1.4.js'/>"></script>
+        <script src="<c:url value='/resources/js/moment-with-locales.min.js'/>"></script>
+        <script src="<c:url value='/resources/js/bootstrap.min.js'/> "></script>
+        <script src="<c:url value='/resources/js/bootstrap-datetimepicker.min.js'/> "></script>
+
         <link rel="stylesheet"
                 href="<c:url value="/resources/css/bootstrap.min.css" />">
         <link rel="stylesheet"
+              href="<c:url value="/resources/css/bootstrap-datetimepicker.css" />">
+        <link rel="stylesheet"
                 href="<c:url value="/resources/css/styles.css" />">
         <jsp:invoke fragment="headContent" />
-        <script src="<c:url value='/resources/js/jquery-2.1.4.js'/>"></script>
-        <script src="<c:url value='/resources/js/bootstrap.min.js'/> "></script>
-        <script src="<c:url value='/resources/js/selectize.min.js'/>"></script>
     </head>
 
     <body>

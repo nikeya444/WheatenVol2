@@ -1,8 +1,11 @@
 package ua.dp.wheaten.site.root.repositories;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import ua.dp.wheaten.site.root.entities.Product;
 import ua.dp.wheaten.site.root.entities.ProductType;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,4 +16,6 @@ import ua.dp.wheaten.site.root.entities.ProductType;
  */
 public interface ProductRepository extends CrudRepository<Product, Integer> {
     Product findByName(String name);
+    @Query(value = "select p.name from Product p")
+    List<String> findAllProductNames();
 }

@@ -31,7 +31,7 @@ public abstract class AbstractGenericService<T, ID extends Serializable>
 
     @Override
     @Transactional
-    public List<T> getAll() {
+    public List<T> findAll() {
         return (List<T>) this.getRepository().findAll();
     }
 

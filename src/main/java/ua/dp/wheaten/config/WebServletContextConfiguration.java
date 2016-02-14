@@ -3,11 +3,15 @@ package ua.dp.wheaten.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import ua.dp.wheaten.site.web.converter.EntityToStringConverter;
+import ua.dp.wheaten.site.web.converter.StringToLocalDateConverter;
+import ua.dp.wheaten.site.web.converter.LocalDateToStringConverter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,5 +39,10 @@ public class WebServletContextConfiguration extends WebMvcConfigurerAdapter {
         return resolver;
     }
 
-
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new StringToLocalDateConverter("dd.MM.yyyy"));
+        registry.addConverter(new LocalDateToStringConverter("dd.MM.yyyy"));
+        registry.addConverter(new EntityToStringConverter());
+    }
 }

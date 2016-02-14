@@ -24,7 +24,7 @@ import java.util.Set;
 @Table(name = "PARTNERS")
 @JsonDeserialize(using = DomainObjectDeserializer.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Partner extends PersistableObjectAudit {
+public class Partner extends PersistableObjectAudit implements Convertable {
 
     @Column(name = "FIRSTNAME")
     private String firstname;
@@ -90,6 +90,11 @@ public class Partner extends PersistableObjectAudit {
     @PreUpdate
     private void populateFullnameField() {
         this.fullname = this.lastname + " " + this.firstname + " " + this.fathername;
+    }
+
+    @Override
+    public String createStringRepresentation() {
+        return this.fullname;
     }
 
     @Override

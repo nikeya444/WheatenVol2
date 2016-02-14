@@ -7,13 +7,15 @@ import ua.dp.wheaten.site.root.entities.Product;
 import ua.dp.wheaten.site.root.repositories.DocumentRepository;
 import ua.dp.wheaten.site.root.repositories.PartnerRepository;
 import ua.dp.wheaten.site.root.repositories.ProductRepository;
+import ua.dp.wheaten.site.root.repositories.StorageRepository;
 import ua.dp.wheaten.site.root.services.DocumentService;
+import ua.dp.wheaten.site.web.formobjects.DocumentSearchCriteria;
 import ua.dp.wheaten.site.web.formobjects.DocumentWrapper;
+import ua.dp.wheaten.site.web.formobjects.SearchCriteria;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,16 +31,35 @@ public class DocumentController {
     private static final String DOCUMENTS_JSP_PATH = "documents/doc";
     private static final String DOCUMENTS_JSP_ATTRIBUTE = "documents";
     private static final String TITLE = "title";
+    private static final String TITLE_VALUE = "Документы";
     private static Map<Document.Type, String> descriptions;
 
     @Inject
-    private ProductRepository productService;
+    private ProductRepository productRepository;
     @Inject
     private PartnerRepository partnerRepository;
     @Inject
     private DocumentRepository documentRepository;
     @Inject
     private DocumentService documentService;
+    @Inject
+    private StorageRepository storageRepository;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String getAllDocuments(Map<String, Object> model) {
+        LocalDate now = LocalDate.now();
+        LocalDate from = LocalDate.of(now.getYear(), now.getMonth(), 1);
+        List<Document> documents = documentRepository.findAllByStatusAndDateOfDocumentBetween(true, from, now);
+        model.put(DOCUMENTS_JSP_ATTRIBUTE, documents);
+        model.put(TITLE, TITLE_VALUE);
+        model.put("documentTypes", descriptions.entrySet());
+        model.put("searchCriteria", new SearchCriteria());
+        model.put("partners", partnerRepository.findAll());
+        model.put("products", productRepository.findAll());
+        model.put("storages", storageRepository.findAll());
+        model.put("action", "/documents/find");
+        return DOCUMENTS_JSP_PATH;
+    }
 
     @RequestMapping(value = "{documentType}", method = RequestMethod.GET)
     public String showDocuments(@PathVariable String documentType, Map<String, Object> model) {
@@ -54,30 +75,6 @@ public class DocumentController {
         return DOCUMENTS_JSP_PATH;
     }
 
-    @RequestMapping(value = "incoming", method = RequestMethod.GET)
-    public String showAllIncomingDocuments(Map<String, Object> model) {
-        List<Document> documents = documentService.findIncomingDocuments(true);
-        model.put(DOCUMENTS_JSP_ATTRIBUTE, documents);
-        model.put(TITLE, "Входящие документы");
-        return DOCUMENTS_JSP_PATH;
-    }
-
-    @RequestMapping(value = "outgoing", method = RequestMethod.GET)
-    public String showAllOutgoingDocuments(Map<String, Object> model) {
-        List<Document> documents = documentService.findOutgoingDocuments(true);
-        model.put(DOCUMENTS_JSP_ATTRIBUTE, documents);
-        model.put(TITLE, "Исходящие документы");
-        return DOCUMENTS_JSP_PATH;
-    }
-
-    @RequestMapping(value = "movement", method = RequestMethod.GET)
-    public String showAllMovementDocuments(Map<String, Object> model) {
-        List<Document> documents = documentService.findMovementDocuments(true);
-        model.put(DOCUMENTS_JSP_ATTRIBUTE, documents);
-        model.put(TITLE, "Документы перемещения");
-        return DOCUMENTS_JSP_PATH;
-    }
-
     @RequestMapping(value = "orders", method = RequestMethod.GET)
     public String showAllOrders(Map<String, Object> model) {
         List<Document> orders = documentRepository.findAllByStatus(false);
@@ -86,12 +83,29 @@ public class DocumentController {
         return DOCUMENTS_JSP_PATH;
     }
 
+    @RequestMapping(value = "find", method = RequestMethod.GET)
+    public String findDocuments(SearchCriteria criteria, Map<String, Object> model) {
+        System.out.println(criteria.getDocumentCriteria().getFrom() + " " + criteria.getDocumentCriteria().getTo() + " " + criteria.getDocumentCriteria().getDocumentTypes());
+        List<Document> documents = documentService.findAllByCriteria(criteria);
+        model.put(TITLE, TITLE_VALUE);
+        model.put(DOCUMENTS_JSP_ATTRIBUTE, documents);
+        model.put("documentTypes", descriptions.entrySet());
+        model.put("searchCriteria", criteria);
+        model.put("partners", partnerRepository.findAll());
+        model.put("products", productRepository.findAll());
+        model.put("storages", storageRepository.findAll());
+        model.put("action", "/documents/find");
+
+        return DOCUMENTS_JSP_PATH;
+    }
+
     @RequestMapping(value = "new1", method = RequestMethod.GET)
     public String showDocumentForm(Map<String, Object> model) {
-        Iterable<Product> products = productService.findAll();
+        Iterable<Product> products = productRepository.findAll();
         model.put("products", products);
-        model.put("documentTypes", Document.Type.values());
+        model.put("documentTypes", descriptions.entrySet());
         model.put("partners", partnerRepository.findAll());
+        model.put("storages", storageRepository.findAll());
 
 
 
@@ -100,7 +114,7 @@ public class DocumentController {
 
     @RequestMapping(value = "new1", method = RequestMethod.POST)
     public @ResponseBody String addNewDocument(@RequestBody DocumentWrapper wrapper) {
-        System.out.println("wrapper - " + wrapper.getDocument() + " details - " + wrapper.getDetails() );
+        System.out.println("wrapper - " + wrapper.getDocument() + " details - " + wrapper.getDetails());
         Document document = wrapper.getDocument();
         document.setDetails(wrapper.getDetails());
         documentRepository.save(document);
@@ -110,13 +124,35 @@ public class DocumentController {
     //    return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
+    @RequestMapping(value = "new", method = RequestMethod.GET)
+    public String addNewDoc(Map<String, Object> model) {
+        Document document = documentRepository.findOne(3);
+        DocumentWrapper wrapper = new DocumentWrapper(document, document.getDetails());
+        model.put("docWrapper", wrapper);
+        model.put("products", productRepository.findAllProductNames());
+        model.put("documentTypes", descriptions.entrySet());
+        model.put("partners", partnerRepository.findPartnersFullnames());
+    //    model.put("storages", storageRepository.findAll());
+        return "documents/newDocumentSpring";
+    }
+
+    @RequestMapping(value = "new", method = RequestMethod.POST)
+    public String addNewDoc(DocumentWrapper wrapper) {
+        System.out.println("wrapper - " + wrapper.getDocument() + " details - " + wrapper.getDetails());
+        Document document = wrapper.getDocument();
+        document.setDetails(wrapper.getDetails());
+        documentRepository.save(document);
+
+        return "redirect: documents/orders";
+    }
+
     private Document.Type getDocumentType(String documentType) {
        return Document.Type
                .valueOf(documentType.toUpperCase());
     }
 
     static {
-        descriptions = new HashMap<Document.Type, String>() {{
+        descriptions = new LinkedHashMap<Document.Type, String>() {{
                 put(Document.Type.PURCHASE, "Покупка");
                 put(Document.Type.REFUND, "Возврат");
                 put(Document.Type.SALE, "Продажа");
