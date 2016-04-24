@@ -1,5 +1,7 @@
 package ua.dp.wheaten.site.root.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -22,6 +24,7 @@ public class Phone extends PersistableObjectAudit {
     @Column(name = "FULL_NUMBER")
     private String fullNumber;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "PARTNER_ID")
     private Partner partner;

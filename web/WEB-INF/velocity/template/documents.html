@@ -1,0 +1,177 @@
+
+     <div class="container">
+
+
+
+
+
+
+
+                        <div class="row" >
+
+                            <div class="col-xs-3">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Форма поиска</div>
+                                    <div class="panel-body">
+                                        <form>
+                                            <div class="row">
+                                                <div class="col-xs-10">
+                                                    <div class="form-group">
+                                                        <div class="input-group date" id="datetimepicker1">
+                                                            <input ng-model="docCtrl.search.from" class="form-control" placeholder="Дата, начало"/>
+                                            <span class="input-group-addon">
+                                              <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-10">
+                                                    <div class="form-group">
+                                                        <div class="input-group date" id="datetimepicker2">
+                                                            <input ng-model="docCtrl.search.to" type="text" class="form-control" placeholder="Дата, конец"/>
+                                                        <span class="input-group-addon">
+                                                          <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-10">
+                                                    <div class="form-group">
+                                                            <div ng-repeat="documentType in docCtrl.types" class="checkbox">
+                                                                <label>
+                                                                    <input type="checkbox" ng-model="docCtrl.search.docTypes[documentType.key]" value="{{documentType.key}}">{{documentType.value}}</input>
+                                                                </label>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-10">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <checkbox ng-model="docCtrl.search.order" />Заказы
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-10">
+                                                    <div class="form-group">
+                                                        <input type="text" ng-model="docCtrl.search.partnerId" placeholder="Контрагент" uib-typeahead="partner for partner in docCtrl.fetchParnters($viewValue)" typeahead-loading="docCtrl.loadingLocations" typeahead-no-results="docCtrl.noResults" class="form-control">
+                                                        <i ng-show="docCtrl.loadingLocations" class="glyphicon glyphicon-refresh"></i>
+                                                        <div ng-show="docCtrl.noResults">
+                                                            <i class="glyphicon glyphicon-remove"></i> No Results Found
+                                                        </div>
+                                                        <!--   <select ng-model="docCtrl.search.partnersId" class="form-control">
+                                                            <option value="-1" label="--- Все ---" />
+                                                            <option ng-repeat="partner in docCtrl.partners" value="{{partner.id}}">{{partner.fullname}}</option>
+                                                        </select>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-10">
+                                                    <div class="form-group">
+                                                        <select ng-model="docCtrl.search.productIdList" class="form-control">
+                                                            <option value="-1" label="--- Все ---" />
+                                                            <option ng-repeat="product in docCtrl.products" value="{{product.id}}" >{{product.name}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-10">
+                                                    <div class="form-group">
+                                                        <select
+                                                                ng-model="docCtrl.search.storageIdList"
+                                                                ng-options="storage.name for storage in docCtrl.storages track by storage.id"
+                                                                class="form-control">
+                                                            <option value="-1">--- Все ---</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-10">
+                                                    <div class="form-group">
+                                                        <input ng-model="docCtrl.search.priceMin" class="form-control" placeholder="Цена, min"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-10">
+                                                    <div class="form-group">
+                                                        <input ng-model="docCtrl.search.priceMax" class="form-control" placeholder="Цена, max"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-10">
+                                                    <div class="form-group">
+
+                                                        <input ng-model="docCtrl.search.quantityMin" class="form-control" placeholder="Количество, min"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-10">
+                                                    <div class="form-group">
+                                                        <input ng-model="docCtrl.search.quantityMax" class="form-control" placeholder="Количество, max"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-offset-4 col-xs-2">
+                                                    <button type="submit" class="btn btn-primary">Поиск</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-xs-9">
+                                {{docCtrl.search.docTypes}}
+                                {{parnters}}
+                                <p ng-repeat="partner in partners">
+                                    {{partner.name}}
+                                </p>
+                                <div class="row" ng-repeat="document in docCtrl.documents">
+                                    <div class="col-xs-3 center-block">{{document.partner.fullname}}</div>
+                                    <div class="col-xs-2 center-block">{{document.documentType}} </div> <br/><br/>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+     </div>
+
+     <script type="text/javascript">
+         $(function () {
+             //Инициализация datetimepicker8 и datetimepicker9
+             $("#datetimepicker1").datetimepicker(
+                     {pickTime: false, language: 'ru'}
+             );
+             $("#datetimepicker2").datetimepicker(
+                     {pickTime: false, language: 'ru'}
+             );
+             //При изменении даты в 8 datetimepicker, она устанавливается как минимальная для 9 datetimepicker
+             $("#datetimepicker1").on("dp.change",function (e) {
+                 $("#datetimepicker2").data("DateTimePicker").setMinDate(e.date);
+             });
+             //При изменении даты в 9 datetimepicker, она устанавливается как максимальная для 8 datetimepicker
+             $("#datetimepicker2").on("dp.change",function (e) {
+                 $("#datetimepicker1").data("DateTimePicker").setMaxDate(e.date);
+             });
+         });
+      </script>
+
+
+

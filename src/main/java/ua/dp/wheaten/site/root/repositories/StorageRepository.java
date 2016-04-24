@@ -3,6 +3,8 @@ package ua.dp.wheaten.site.root.repositories;
 import org.springframework.data.repository.CrudRepository;
 import ua.dp.wheaten.site.root.entities.Storage;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: kkm
@@ -11,4 +13,5 @@ import ua.dp.wheaten.site.root.entities.Storage;
  * To change this template use File | Settings | File Templates.
  */
 public interface StorageRepository extends CrudRepository<Storage, Integer> {
+    List<Storage> findAll();
 }

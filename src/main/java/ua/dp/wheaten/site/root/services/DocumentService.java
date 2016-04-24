@@ -3,6 +3,7 @@ package ua.dp.wheaten.site.root.services;
 import ua.dp.wheaten.site.root.entities.Document;
 import ua.dp.wheaten.site.root.entities.DocumentDetail;
 import ua.dp.wheaten.site.root.entities.DocumentType;
+import ua.dp.wheaten.site.web.formobjects.DocumentWrapper;
 import ua.dp.wheaten.site.web.formobjects.SearchCriteria;
 
 import java.io.Serializable;
@@ -20,4 +21,6 @@ public interface DocumentService extends GenericService<Document, Integer> {
     void updateStatus(Integer id, boolean status);
     List<Document> findByDocumentTypeAndStatus(boolean status, Document.Type type);
     List<Document> findAllByCriteria(SearchCriteria searchCriteria);
+    List<Document> findByStatus(boolean status);
+    void update(Integer id, DocumentWrapper wrapper);
 }

@@ -11,8 +11,8 @@ public class DetailCriteria {
 
     private List<Integer> productIdList = new LinkedList<>();
     private List<Integer> storageIdList = new LinkedList<>();
-    private BigDecimal sumMin;
-    private BigDecimal sumMax;
+    private BigDecimal priceMin;
+    private BigDecimal priceMax;
     private Integer quantityMin;
     private Integer quantityMax;
 
@@ -32,20 +32,20 @@ public class DetailCriteria {
         this.storageIdList = storageIdList;
     }
 
-    public BigDecimal getSumMin() {
-        return sumMin;
+    public BigDecimal getPriceMin() {
+        return priceMin;
     }
 
-    public void setSumMin(BigDecimal sumMin) {
-        this.sumMin = sumMin;
+    public void setPriceMin(BigDecimal priceMin) {
+        this.priceMin = priceMin;
     }
 
-    public BigDecimal getSumMax() {
-        return sumMax;
+    public BigDecimal getPriceMax() {
+        return priceMax;
     }
 
-    public void setSumMax(BigDecimal sumMax) {
-        this.sumMax = sumMax;
+    public void setPriceMax(BigDecimal priceMax) {
+        this.priceMax = priceMax;
     }
 
     public Integer getQuantityMin() {

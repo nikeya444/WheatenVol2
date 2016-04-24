@@ -11,11 +11,13 @@ import ua.dp.wheaten.site.root.repositories.DocumentRepository;
 import ua.dp.wheaten.site.root.services.DocumentService;
 import ua.dp.wheaten.site.web.formobjects.DetailCriteria;
 import ua.dp.wheaten.site.web.formobjects.DocumentCriteria;
+import ua.dp.wheaten.site.web.formobjects.DocumentWrapper;
 import ua.dp.wheaten.site.web.formobjects.SearchCriteria;
 
 import javax.inject.Inject;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -46,6 +48,17 @@ public class DocumentServiceImpl
 
     @Override
     @Transactional
+    public void update(Integer id, DocumentWrapper wrapper) {
+        Document cleanDocument = documentRepository.findOne(id);
+        cleanDocument.getDetails().size();
+
+        cleanDocument.setDetails(wrapper.getDetails());
+        //cleanDocument.setDocumentType(Document.Type.SALE);
+        documentRepository.save(cleanDocument);
+    }
+
+    @Override
+    @Transactional
     public void updateStatus(Integer id, boolean status) {
         Document document = getRepository().findOne(id);
         document.setStatus(status);
@@ -61,9 +74,14 @@ public class DocumentServiceImpl
     }
 
     @Override
+    public List<Document> findByStatus(boolean status) {
+        return documentRepository.findByStatus(status);
+    }
+
+    @Override
     public List<Document> findAllByCriteria(SearchCriteria searchCriteria) {
-        BooleanBuilder builder = this.createPredicate( searchCriteria );
-        return this.documentRepository.findAllByCriteria( builder );
+        BooleanBuilder predicate = this.createPredicate( searchCriteria );
+        return this.documentRepository.findAllByCriteria( predicate );
     }
 
     private BooleanBuilder createPredicate(SearchCriteria searchCriteria) {
@@ -97,12 +115,12 @@ public class DocumentServiceImpl
         }
 
         if ( criteria.getFrom() != null ) {
-            builder.and(doc.dateOfDocument.after(criteria.getFrom()));
+            builder.and(doc.dateOfDocument.after(criteria.getFrom().minusDays(1)));
         }
 
         if ( criteria.getTo() != null ) {
             builder.and(
-                    doc.dateOfDocument.before( criteria.getTo() )
+                    doc.dateOfDocument.before( criteria.getTo().plusDays(1) )
             );
         }
 
@@ -113,9 +131,9 @@ public class DocumentServiceImpl
             );
         }
 
-        if ( !criteria.isOrder() ) {
+       /* if ( !criteria.isOrder() ) {
             builder.and( doc.status.eq( true ) );
-        }
+        } */  builder.and( doc.status.eq( !criteria.isOrder() ) );
     }
 
     private void addDetailPredicate(DetailCriteria criteria, BooleanBuilder builder) {
@@ -125,18 +143,57 @@ public class DocumentServiceImpl
         QDocumentDetail detail = QDocumentDetail.documentDetail;
 
         List<Integer> productList = criteria.getProductIdList();
-        if ( productList != null && productList.size() > 0 && productList.get(0) > 0) {
+        if (productList != null && productList.size() > 0 && productList.get(0) > 0) {
             builder.and(
-                    detail.product.id.in( productList )
+                    detail.product.id.in(productList)
             );
 
         }
 
         List<Integer> storageList = criteria.getStorageIdList();
-        if ( storageList != null &&  storageList.size() > 0 && storageList.get(0) > 0) {
+        if (storageList != null && storageList.size() > 0 && storageList.get(0) > 0) {
             builder.and(
-                    detail.storage.id.in( storageList )
+                    detail.storage.id.in(storageList)
             );
+        }
+
+        BigDecimal minPrice = criteria.getPriceMin();
+        BigDecimal maxPrice = criteria.getPriceMax();
+        if (minPrice != null && maxPrice != null && minPrice.equals(maxPrice)) {
+            builder.and(
+                    (detail.sum.divide(detail.quantity)).abs().eq(maxPrice)
+            );
+        } else {
+            if (minPrice != null) {
+                builder.and(
+                        (detail.sum.divide(detail.quantity)).abs().goe(minPrice)
+                );
+            }
+
+            if (maxPrice != null) {
+                builder.and(
+                        (detail.sum.divide(detail.quantity)).abs().loe(maxPrice)
+                );
+            }
+        }
+
+        Integer qMin = criteria.getQuantityMin();
+        Integer qMax = criteria.getQuantityMax();
+        if (qMin != null && qMax != null && qMin.equals(qMax)) {
+            builder.and(
+                detail.quantity.abs().eq(qMax)
+            );
+        } else {
+            if (qMin != null) {
+                builder.and(
+                    detail.quantity.abs().goe(qMin)
+                );
+            }
+            if (qMax != null) {
+                builder.and(
+                    detail.quantity.abs().loe(qMax)
+                );
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package ua.dp.wheaten.site.root.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -34,6 +35,7 @@ public class DocumentDetail extends PersistableObjectAudit {
     @Column(name = "SUMM")
     private BigDecimal sum;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "DOCUMENT_ID")
     private Document document;
@@ -45,6 +47,7 @@ public class DocumentDetail extends PersistableObjectAudit {
     @PrePersist
     @PreUpdate
     private void correctDetailDueToDocumentType() {
+        System.err.println(price);
         sum = price.multiply(new BigDecimal(quantity));
         this.document.correctInOutDetail(this);
     }
@@ -120,7 +123,7 @@ public class DocumentDetail extends PersistableObjectAudit {
     @Override
     public String toString() {
         return "DocumentDetail{" +
-                "id=" + getId() +
+              //  "id=" + getId() +
                 ", product=" + product.getName() +
                 ", quantity=" + quantity +
                 ", price=" + price +

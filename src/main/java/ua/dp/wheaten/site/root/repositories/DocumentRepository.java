@@ -28,6 +28,9 @@ public interface DocumentRepository extends CrudRepository<Document, Integer>, Q
             "       where d.status = ?1 and d.dateOfDocument between ?2 and ?3")
     List<Document> findAllByStatusAndDateOfDocumentBetween(boolean status, LocalDate from, LocalDate to);
 
+    @Query(value = "select distinct d from Document d join fetch d.details where d.status = ?1")
+    List<Document> findByStatus(boolean status);
+
     List<Document> findAllByStatusAndDateOfDocumentBetweenAndDocumentTypeIn(boolean status, LocalDate from, LocalDate to, List<Document.Type> types);
 
     @Query(value = "select distinct d from Document d join fetch d.details where d.status = ?1 and d.dateOfDocument between ?2 and ?3 and d.documentType in ?4 order by d.dateOfDocument, d.documentType")

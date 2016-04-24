@@ -35,7 +35,7 @@ public class Document extends PersistableObjectAudit {
 
     @ManyToOne
     @JoinColumn(name = "PARTNER_ID")
-    @JsonProperty(value = "partnerId")
+  //  @JsonProperty(value = "partnerId")
     private Partner partner;
 
     @Column(name = "STATUS")
@@ -44,7 +44,9 @@ public class Document extends PersistableObjectAudit {
     @Column(name = "DATE_OF_DOCUMENT")
     private LocalDate dateOfDocument;
 
-    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+  /*  @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "DETAILS", joinColumns = @JoinColumn(name = "DOCUMENT_ID"))   */
     private List<DocumentDetail> details = new ArrayList<>();
 
     void correctInOutDetail(DocumentDetail detail) {

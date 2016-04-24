@@ -18,4 +18,5 @@ public interface ProductRepository extends CrudRepository<Product, Integer> {
     Product findByName(String name);
     @Query(value = "select p.name from Product p")
     List<String> findAllProductNames();
+    List<Product> findAll();
 }

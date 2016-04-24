@@ -9,9 +9,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-import ua.dp.wheaten.site.web.converter.EntityToStringConverter;
-import ua.dp.wheaten.site.web.converter.StringToLocalDateConverter;
-import ua.dp.wheaten.site.web.converter.LocalDateToStringConverter;
+import ua.dp.wheaten.site.web.converter.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,5 +42,9 @@ public class WebServletContextConfiguration extends WebMvcConfigurerAdapter {
         registry.addConverter(new StringToLocalDateConverter("dd.MM.yyyy"));
         registry.addConverter(new LocalDateToStringConverter("dd.MM.yyyy"));
         registry.addConverter(new EntityToStringConverter());
+
+        registry.addConverter(new StringToProductConverter());
+        registry.addConverter(new StringToPartnerConverter());
+        registry.addConverter(new StringToStorageConverter());
     }
 }

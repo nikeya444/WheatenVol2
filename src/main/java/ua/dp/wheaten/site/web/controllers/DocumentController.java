@@ -3,12 +3,14 @@ package ua.dp.wheaten.site.web.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.dp.wheaten.site.root.entities.Document;
+import ua.dp.wheaten.site.root.entities.DocumentDetail;
 import ua.dp.wheaten.site.root.entities.Product;
 import ua.dp.wheaten.site.root.repositories.DocumentRepository;
 import ua.dp.wheaten.site.root.repositories.PartnerRepository;
 import ua.dp.wheaten.site.root.repositories.ProductRepository;
 import ua.dp.wheaten.site.root.repositories.StorageRepository;
 import ua.dp.wheaten.site.root.services.DocumentService;
+import ua.dp.wheaten.site.web.formobjects.DocumentCriteria;
 import ua.dp.wheaten.site.web.formobjects.DocumentSearchCriteria;
 import ua.dp.wheaten.site.web.formobjects.DocumentWrapper;
 import ua.dp.wheaten.site.web.formobjects.SearchCriteria;
@@ -47,9 +49,15 @@ public class DocumentController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String getAllDocuments(Map<String, Object> model) {
+
         LocalDate now = LocalDate.now();
         LocalDate from = LocalDate.of(now.getYear(), now.getMonth(), 1);
-        List<Document> documents = documentRepository.findAllByStatusAndDateOfDocumentBetween(true, from, now);
+        SearchCriteria criteria = new SearchCriteria();
+        DocumentCriteria documentCriteria = new DocumentCriteria();
+     //   documentCriteria.setFrom(from);
+     //   documentCriteria.setTo(now);
+        criteria.setDocumentCriteria(documentCriteria);
+        List<Document> documents = documentService.findAllByCriteria(criteria);
         model.put(DOCUMENTS_JSP_ATTRIBUTE, documents);
         model.put(TITLE, TITLE_VALUE);
         model.put("documentTypes", descriptions.entrySet());
@@ -61,18 +69,37 @@ public class DocumentController {
         return DOCUMENTS_JSP_PATH;
     }
 
-    @RequestMapping(value = "{documentType}", method = RequestMethod.GET)
-    public String showDocuments(@PathVariable String documentType, Map<String, Object> model) {
+    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    public String showDocument(@PathVariable Integer id, Map<String, Object> model) {
+        Document document = documentRepository.findOne(id);
+        DocumentWrapper wrapper = new DocumentWrapper(document);
+        model.put("docWrapper", wrapper);
 
-        Document.Type type = this.getDocumentType(documentType);
+        model.put("documentTypes", descriptions.entrySet());
+        model.put("searchCriteria", new SearchCriteria());
+        model.put("partners", partnerRepository.findAll());
+        model.put("products", productRepository.findAll());
+        model.put("storages", storageRepository.findAll());
+        model.put("action", "/documents/find");
 
-        List<Document> documents = documentService
-                .findByDocumentTypeAndStatus(true, type);
+        return "documents/newDocumentSpring";
+    }
 
-        model.put(DOCUMENTS_JSP_ATTRIBUTE, documents);
-        model.put(TITLE, descriptions.get(type));
+    @RequestMapping(value = "{id}", method = RequestMethod.POST)
+    public String updateDocument(@PathVariable Integer id, DocumentWrapper wrapper) {
+        System.err.println("wrapper - " + wrapper.getDocument() + " details - " + wrapper.getDetails());
+        documentService.update(id, wrapper);
+        return "redirect:/" + DOCUMENTS_JSP_ATTRIBUTE;
+    }
 
-        return DOCUMENTS_JSP_PATH;
+    @RequestMapping(value = "{id}/todocument", method = RequestMethod.POST)
+    public String updateStatus(@PathVariable Integer id, SearchCriteria criteria, Map<String, Object> model) {
+
+        Document document = documentRepository.findOne(id);
+        document.setStatus(true);
+        documentRepository.save(document);
+
+        return "redirect:/documents/orders";
     }
 
     @RequestMapping(value = "orders", method = RequestMethod.GET)
@@ -80,6 +107,12 @@ public class DocumentController {
         List<Document> orders = documentRepository.findAllByStatus(false);
         model.put(DOCUMENTS_JSP_ATTRIBUTE, orders);
         model.put(TITLE, "Заказы");
+        model.put("documentTypes", descriptions.entrySet());
+        model.put("searchCriteria", new SearchCriteria());
+        model.put("partners", partnerRepository.findAll());
+        model.put("products", productRepository.findAll());
+        model.put("storages", storageRepository.findAll());
+        model.put("action", "/documents/find");
         return DOCUMENTS_JSP_PATH;
     }
 
@@ -95,7 +128,7 @@ public class DocumentController {
         model.put("products", productRepository.findAll());
         model.put("storages", storageRepository.findAll());
         model.put("action", "/documents/find");
-
+        System.out.println(documents);
         return DOCUMENTS_JSP_PATH;
     }
 
@@ -126,13 +159,13 @@ public class DocumentController {
 
     @RequestMapping(value = "new", method = RequestMethod.GET)
     public String addNewDoc(Map<String, Object> model) {
-        Document document = documentRepository.findOne(3);
-        DocumentWrapper wrapper = new DocumentWrapper(document, document.getDetails());
+       // Document document = documentRepository.findOne(3);
+        DocumentWrapper wrapper = new DocumentWrapper(new Document(), Collections.singletonList(new DocumentDetail()));
         model.put("docWrapper", wrapper);
-        model.put("products", productRepository.findAllProductNames());
+        model.put("products", productRepository.findAll());
         model.put("documentTypes", descriptions.entrySet());
-        model.put("partners", partnerRepository.findPartnersFullnames());
-    //    model.put("storages", storageRepository.findAll());
+        model.put("partners", partnerRepository.findAll());
+        model.put("storages", storageRepository.findAll());
         return "documents/newDocumentSpring";
     }
 
@@ -143,7 +176,7 @@ public class DocumentController {
         document.setDetails(wrapper.getDetails());
         documentRepository.save(document);
 
-        return "redirect: documents/orders";
+        return "redirect:/documents";
     }
 
     private Document.Type getDocumentType(String documentType) {

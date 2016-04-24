@@ -1,16 +1,11 @@
 package ua.dp.wheaten.site.root.repositories.impl;
 
-import com.mysema.query.BooleanBuilder;
 import com.mysema.query.types.Predicate;
 import org.springframework.data.jpa.repository.support.QueryDslRepositorySupport;
 import ua.dp.wheaten.site.root.entities.Document;
 import ua.dp.wheaten.site.root.entities.QDocument;
 import ua.dp.wheaten.site.root.entities.QDocumentDetail;
 import ua.dp.wheaten.site.root.repositories.DocumentRepositoryCustom;
-
-import ua.dp.wheaten.site.web.formobjects.DetailCriteria;
-import ua.dp.wheaten.site.web.formobjects.DocumentCriteria;
-import ua.dp.wheaten.site.web.formobjects.SearchCriteria;
 
 
 import java.util.List;
@@ -32,9 +27,11 @@ public class DocumentRepositoryImpl extends QueryDslRepositorySupport implements
         QDocumentDetail detail = QDocumentDetail.documentDetail;
 
         return from(doc)
-                .innerJoin(doc.details, detail).fetch()
+           //     .innerJoin(doc.details, detail).fetch()
                 .where(predicate)
-                .distinct().list(doc);
+                .distinct()
+                .orderBy(doc.dateOfDocument.asc(), doc.documentType.asc())
+                .list(doc);
 
     }
 }

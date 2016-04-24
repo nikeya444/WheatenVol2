@@ -7,6 +7,11 @@ public class SearchCriteria {
     private DocumentCriteria documentCriteria;
     private DetailCriteria detailCriteria;
 
+    public SearchCriteria() {
+    }
+
+
+
     public DocumentCriteria getDocumentCriteria() {
         return documentCriteria;
     }

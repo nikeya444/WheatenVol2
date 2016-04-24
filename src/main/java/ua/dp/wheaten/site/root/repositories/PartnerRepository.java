@@ -1,5 +1,6 @@
 package ua.dp.wheaten.site.root.repositories;
 
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import ua.dp.wheaten.site.root.entities.Partner;
@@ -19,8 +20,11 @@ public interface PartnerRepository extends CrudRepository<Partner, Integer> {
     @Query(value = "select p.fullname from Partner p")
     List<String> findPartnersFullnames();
 
+    List<Partner> findByFullnameLike(String name);
+
     @Query(value = "select p.id, p.fullname from Partner p")
     Map<Integer, String> findAllNames();
     Partner findByFullname(String fullname);
     Partner findByFirstnameOrLastname(String firstname, String lastname);
+    List<Partner> findAll();
 }

@@ -26,7 +26,7 @@
                         <li><a href="<c:url value='/documents/incoming'/>">Входящие</a></li>
                         <li><a href="<c:url value='/documents/movement'/>">Перемещения</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="<c:url value='/documents/new1'/>">Создать</a> </li>
+                        <li><a href="<c:url value='/documents/new'/>">Создать</a> </li>
                     </ul>
                 </li>
                 <li><a href="#"></a></li>
