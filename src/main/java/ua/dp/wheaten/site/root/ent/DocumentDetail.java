@@ -1,8 +1,10 @@
-package ua.dp.wheaten.site.root.entities;
+package ua.dp.wheaten.site.root.ent;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ua.dp.wheaten.site.root.entities.*;
+import ua.dp.wheaten.site.root.entities.Document;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -22,7 +24,7 @@ import java.time.Month;
 @Table(name = "DETAILS")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DocumentDetail extends PersistableObjectAudit  {
-
+    /*
     public DocumentDetail() {
     }
 
@@ -33,14 +35,14 @@ public class DocumentDetail extends PersistableObjectAudit  {
         this.storage = storage;
     }
 
-    public DocumentDetail(Product product, Integer quantity, BigDecimal sum, Document document, Storage storage) {
+    public DocumentDetail(Product product, Integer quantity, BigDecimal sum, ua.dp.wheaten.site.root.ent.Document document, Storage storage) {
         this.product = product;
         this.quantity = quantity;
         this.sum = sum;
         this.document = document;
         this.storage = storage;
     }
-
+    /*
     @ManyToOne
     @JoinColumn(name = "PRODUCT_ID")
     @JsonProperty(value = "productId")
@@ -59,18 +61,36 @@ public class DocumentDetail extends PersistableObjectAudit  {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "DOCUMENT_ID")
-    private Document document;
+    private ua.dp.wheaten.site.root.ent.Document document;
 
     @ManyToOne
     @JoinColumn(name = "STORAGE_ID")
     @NotNull(message = "Storage must be selected")
     private Storage storage;
 
+    @PrePersist
+    @PreUpdate
+    private void correctDetailDueToDocumentType() {
+        this.document.correctInOutDetail(this);
+    }
+
     @PostLoad
     private void abs() {
-    //    if (this.document.getType() == Document.Type.MOVEMENT) return;
+        if (this.document.getType() == ua.dp.wheaten.site.root.ent.Document.Type.MOVEMENT) return;
         this.sum = this.sum.abs();
         this.quantity = Math.abs(this.quantity);
+    }
+
+    void negateSum() {
+        this.setSum(
+                this.getSum().negate()
+        );
+    }
+
+    void negateQuantity() {
+        this.setQuantity(
+                Math.negateExact(
+                        this.getQuantity() ) );
     }
 
     public Product getProduct() {
@@ -97,7 +117,7 @@ public class DocumentDetail extends PersistableObjectAudit  {
         this.sum = sum;
     }
 
-    public Document getDocument() {
+    public ua.dp.wheaten.site.root.entities.Document getDocument() {
         return document;
     }
 
@@ -116,8 +136,8 @@ public class DocumentDetail extends PersistableObjectAudit  {
     @Override
     public boolean equals(Object o) {
         if (o == null) return false;
-        if (!(o instanceof DocumentDetail)) return false;
-        DocumentDetail obj = (DocumentDetail) o;
+        if (!(o instanceof ua.dp.wheaten.site.root.entities.DocumentDetail)) return false;
+        ua.dp.wheaten.site.root.entities.DocumentDetail obj = (ua.dp.wheaten.site.root.entities.DocumentDetail) o;
         return this.getId().equals(obj.getId());
     }
 
@@ -134,5 +154,5 @@ public class DocumentDetail extends PersistableObjectAudit  {
                 ", sum=" + sum +
                 ", storage=" + storage +
                 "} " + System.identityHashCode(this);
-    }
+    }   */
 }

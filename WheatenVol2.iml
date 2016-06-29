@@ -46,12 +46,29 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/java" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/target/WheatenVol2-2.0-SNAPSHOT" />
+      <excludeFolder url="file://$MODULE_DIR$/target/apache-tomcat-maven-plugin" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
       <excludeFolder url="file://$MODULE_DIR$/target/maven-status" />
       <excludeFolder url="file://$MODULE_DIR$/target/surefire" />
       <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp1084710367112850208199339014623689" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp20192971010186118388550188246533" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp24495703941140652632037717255449" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp30260889424353994798805637497241" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp389846615327442368864803686648911" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp42422270813644316757314805316322" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp51726408567479052428020218519240" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp5311326427376673596785644258531" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp53624412873574378778429070815351" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp6147905070260617556696183353745" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp66280393438189356418526032552825" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp685323382376977370965356293799893" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp69058473127225127188258412575540" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp79422889412229731148714999159709" />
+      <excludeFolder url="file://$MODULE_DIR$/target/temp82390044691642300751621270867258" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
+      <excludeFolder url="file://$MODULE_DIR$/target/tomcat" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -92,7 +109,7 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.hibernate:hibernate-validator:5.1.2.Final" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml:classmate:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-validator-annotation-processor:5.1.2.Final" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.jboss.logging:jboss-logging:3.2.0.Beta1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.jboss.logging:jboss-logging:3.2.1.Final" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.persistence:javax.persistence:2.1.0" level="project" />
     <orderEntry type="library" name="Maven: javax.transaction:javax.transaction-api:1.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.hibernate:hibernate-entitymanager:4.3.6.Final" level="project" />

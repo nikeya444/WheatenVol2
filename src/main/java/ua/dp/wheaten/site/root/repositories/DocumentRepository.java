@@ -31,14 +31,14 @@ public interface DocumentRepository extends CrudRepository<Document, Integer>, Q
     @Query(value = "select distinct d from Document d join fetch d.details where d.status = ?1")
     List<Document> findByStatus(boolean status);
 
-    List<Document> findAllByStatusAndDateOfDocumentBetweenAndDocumentTypeIn(boolean status, LocalDate from, LocalDate to, List<Document.Type> types);
+    List<Document> findAllByStatusAndDateOfDocumentBetweenAndTypeIn(boolean status, LocalDate from, LocalDate to, List<Document.Type> types);
 
-    @Query(value = "select distinct d from Document d join fetch d.details where d.status = ?1 and d.dateOfDocument between ?2 and ?3 and d.documentType in ?4 order by d.dateOfDocument, d.documentType")
+    @Query(value = "select distinct d from Document d join fetch d.details where d.status = ?1 and d.dateOfDocument between ?2 and ?3 and d.type in ?4 order by d.dateOfDocument, d.type")
     List<Document> searchAllByCriteria(boolean status, LocalDate from, LocalDate to, List<Document.Type> types);
 
     List<Document> findAllByDateOfDocument(LocalDate date);
 
-    List<Document> findAllByStatusAndDocumentTypeIn(boolean status, List<Document.Type> type);
+    List<Document> findAllByStatusAndTypeIn(boolean status, List<Document.Type> type);
 
     @Query(value = "select distinct d " +
             "       from Document d join fetch d.details " +
@@ -56,12 +56,12 @@ public interface DocumentRepository extends CrudRepository<Document, Integer>, Q
 
     @Query(value = "select d " +
             "       from Document d join fetch d.details dd " +
-            "       where d.documentType = ?1 and dd.product = ?2")
+            "       where d.type = ?1 and dd.product = ?2")
     List<Document> findByDocumentTypeAndDetailsProduct(Document.Type type, Product product);
 
     @Query(value = "select d " +
             "       from Document d join fetch d.details dd " +
-            "       where dd.product = ?1 and d.documentType <> 'MOVEMENT'")
+            "       where dd.product = ?1 and d.type <> 'MOVEMENT'")
     List<Document> findByDetailsProduct(Product product);
 
     @Query(value = "select sum(dd.quantity) " +
@@ -83,7 +83,7 @@ public interface DocumentRepository extends CrudRepository<Document, Integer>, Q
 
     @Query(value = "select abs( sum(dd.sum) / sum(dd.quantity) ) " +
             "       from DocumentDetail dd " +
-            "       where dd.document.documentType = ?2 and dd.document.status = true and dd.product = ?1")
+            "       where dd.document.type = ?2 and dd.document.status = true and dd.product = ?1")
     BigDecimal calculateAveragePrice(Product product, Document.Type type);
 
 

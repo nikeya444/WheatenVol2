@@ -6,7 +6,7 @@ import ua.dp.wheaten.site.root.entities.Storage;
 import ua.dp.wheaten.site.root.repositories.StorageRepository;
 
 import javax.inject.Inject;
-import javax.jnlp.IntegrationService;
+
 
 /**
  * Created by kkm on 17.02.2016.

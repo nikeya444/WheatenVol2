@@ -43,9 +43,9 @@ public class DocumentController {
     static {
         descriptions = new LinkedHashMap<Document.Type, String>() {{
             put(Document.Type.PURCHASE, "Покупка");
-            put(Document.Type.REFUND, "Возврат");
+
             put(Document.Type.SALE, "Продажа");
-            put(Document.Type.WRITEOFF, "Списание");
+
             put(Document.Type.MOVEMENT, "Перемещение");
         }};
     }

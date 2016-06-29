@@ -57,4 +57,11 @@ public class Product extends PersistableObject {
     public String createStringRepresentation() {
         return this.getName();
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

@@ -1,7 +1,10 @@
-package ua.dp.wheaten.site.root.entities;
+package ua.dp.wheaten.site.root.ent;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ua.dp.wheaten.site.root.entities.DocumentDetail;
+import ua.dp.wheaten.site.root.entities.Partner;
+import ua.dp.wheaten.site.root.entities.PersistableObjectAudit;
 import ua.dp.wheaten.site.root.validation.Date;
 
 import javax.persistence.*;
@@ -31,12 +34,12 @@ import java.util.List;
 public class Document extends PersistableObjectAudit {
 
     public enum Type {
-        SALE, PURCHASE, MOVEMENT
+        SALE, PURCHASE, MOVEMENT, REFUND, WRITEOFF
     }
 
     public Document() {
     }
-
+    /*
     public Document(Type type, Partner partner, boolean status, LocalDate dateOfDocument) {
         this.type = type;
         this.partner = partner;
@@ -44,7 +47,7 @@ public class Document extends PersistableObjectAudit {
         this.dateOfDocument = dateOfDocument;
     }
 
-    public Document(Type type, Partner partner, boolean status, LocalDate dateOfDocument, List<DocumentDetail> details) {
+    public Document(Type type, Partner partner, boolean status, LocalDate dateOfDocument, List<ua.dp.wheaten.site.root.ent.DocumentDetail> details) {
         this.type = type;
         this.partner = partner;
         this.status = status;
@@ -76,7 +79,47 @@ public class Document extends PersistableObjectAudit {
    // @CollectionTable(name = "DETAILS", joinColumns = @JoinColumn(name = "DOCUMENT_ID"))
     @Size(min = 1, message = "Wrong details")
     @Valid
-    private List<DocumentDetail> details = new ArrayList<>();
+    private List<ua.dp.wheaten.site.root.ent.DocumentDetail> details = new ArrayList<>();
+
+    void correctInOutDetail(ua.dp.wheaten.site.root.ent.DocumentDetail detail) {
+        switch (this.type) {
+            case REFUND:
+            case PURCHASE: detail.negateSum();
+                break;
+            case WRITEOFF:
+            case SALE:     detail.negateQuantity();
+        }
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void correctDetails() {
+        if (this.details == null) return;
+        for (ua.dp.wheaten.site.root.ent.DocumentDetail detail: this.details) {
+            detail.setDocument(this);
+        }
+        this.correctMovementDetails();
+    }
+
+    private void correctMovementDetails() {
+        if (this.type != Type.MOVEMENT) return;
+
+        if ( (details.size() % 2) != 0 )
+            throw new IllegalArgumentException("details size must be an even number");
+
+         this.doCorrectMovementDetails(details);
+    }
+
+    private void doCorrectMovementDetails(List<ua.dp.wheaten.site.root.ent.DocumentDetail> details) {
+        ua.dp.wheaten.site.root.ent.DocumentDetail in, out;
+        for (int i = 0; i < details.size(); i += 2) {
+            out = details.get(i);
+            in = details.get(i+1);
+
+            out.negateQuantity();
+            in.negateSum();
+        }
+    }
 
     public Type getType() {
         return type;
@@ -110,21 +153,21 @@ public class Document extends PersistableObjectAudit {
         this.dateOfDocument = dateOfDocument;
     }
 
-    public List<DocumentDetail> getDetails() {
+    public List<ua.dp.wheaten.site.root.ent.DocumentDetail> getDetails() {
         return details;
     }
 
-    public void setDetails(List<DocumentDetail> details) {
+    public void setDetails(List<ua.dp.wheaten.site.root.ent.DocumentDetail> details) {
         this.details = details;
     }
 
-    public void addDetail(DocumentDetail detail) {
+    public void addDetail(ua.dp.wheaten.site.root.ent.DocumentDetail detail) {
         this.details.add(detail);
         detail.setDocument(this);
     }
 
-    public void addAllDetails(Collection<DocumentDetail> details) {
-        for (DocumentDetail detail: details) {
+    public void addAllDetails(Collection<ua.dp.wheaten.site.root.ent.DocumentDetail> details) {
+        for (ua.dp.wheaten.site.root.ent.DocumentDetail detail: details) {
             detail.setDocument(this);
         }
         this.getDetails().addAll(details);
@@ -152,5 +195,5 @@ public class Document extends PersistableObjectAudit {
                 ", dateOfDocument=" + dateOfDocument +
                 ", details=" + details +
                 '}';
-    }
+    }  */
 }

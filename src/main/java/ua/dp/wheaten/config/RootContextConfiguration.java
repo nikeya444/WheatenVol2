@@ -14,6 +14,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import ua.dp.wheaten.site.root.helpers.AutowireHelper;
 
 import javax.persistence.SharedCacheMode;
@@ -48,8 +50,8 @@ public class RootContextConfiguration {
         dataSource.setUsername("root");
         dataSource.setPassword("");
         dataSource.setUrl("jdbc:mysql://localhost:3306/wheaten_one_document");
-    /*    JndiDataSourceLookup lookup = new JndiDataSourceLookup();
-        return lookup.getDataSource("jdbc/wheaten_doc_1"); */
+      /*  JndiDataSourceLookup lookup = new JndiDataSourceLookup();
+        return lookup.getDataSource("jdbc/wheaten_doc_1");*/
         return dataSource;
     }
 
@@ -64,7 +66,7 @@ public class RootContextConfiguration {
         Map<String, Object> properties = new Hashtable<>();
         properties.put("javax.persistence.schema-generation.database.action",
                 "none");
-        properties.put("hibernate.show_sql", "true");
+     //   properties.put("hibernate.show_sql", "true");
 
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         adapter.setDatabasePlatform("org.hibernate.dialect.MySQL5InnoDBDialect");
@@ -97,4 +99,16 @@ public class RootContextConfiguration {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.
     }                  */
+
+    @Bean
+    public LocalValidatorFactoryBean localValidatorFactoryBean() throws ClassNotFoundException {
+        return new LocalValidatorFactoryBean();
+    }
+
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() throws ClassNotFoundException {
+        MethodValidationPostProcessor processor = new MethodValidationPostProcessor();
+        processor.setValidator(this.localValidatorFactoryBean());
+        return processor;
+    }
 }

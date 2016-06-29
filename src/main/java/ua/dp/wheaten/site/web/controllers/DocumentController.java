@@ -1,21 +1,26 @@
 package ua.dp.wheaten.site.web.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ua.dp.wheaten.site.root.entities.Document;
-import ua.dp.wheaten.site.root.entities.DocumentDetail;
-import ua.dp.wheaten.site.root.entities.Product;
+import ua.dp.wheaten.site.root.dto.DetailDTO;
+import ua.dp.wheaten.site.root.dto.DocumentDTO;
+import ua.dp.wheaten.site.root.entities.*;
 import ua.dp.wheaten.site.root.repositories.DocumentRepository;
 import ua.dp.wheaten.site.root.repositories.PartnerRepository;
 import ua.dp.wheaten.site.root.repositories.ProductRepository;
 import ua.dp.wheaten.site.root.repositories.StorageRepository;
 import ua.dp.wheaten.site.root.services.DocumentService;
+import ua.dp.wheaten.site.root.validation.groups.InGroup;
+import ua.dp.wheaten.site.root.validation.groups.MovementGroup;
+import ua.dp.wheaten.site.root.validation.groups.OutGroup;
 import ua.dp.wheaten.site.web.formobjects.DocumentCriteria;
-import ua.dp.wheaten.site.web.formobjects.DocumentSearchCriteria;
 import ua.dp.wheaten.site.web.formobjects.DocumentWrapper;
 import ua.dp.wheaten.site.web.formobjects.SearchCriteria;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -60,35 +65,36 @@ public class DocumentController {
         List<Document> documents = documentService.findAllByCriteria(criteria);
         model.put(DOCUMENTS_JSP_ATTRIBUTE, documents);
         model.put(TITLE, TITLE_VALUE);
-        model.put("documentTypes", descriptions.entrySet());
+
         model.put("searchCriteria", new SearchCriteria());
-        model.put("partners", partnerRepository.findAll());
-        model.put("products", productRepository.findAll());
-        model.put("storages", storageRepository.findAll());
         model.put("action", "/documents/find");
+        populateModel(model);
         return DOCUMENTS_JSP_PATH;
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
     public String showDocument(@PathVariable Integer id, Map<String, Object> model) {
         Document document = documentRepository.findOne(id);
-        DocumentWrapper wrapper = new DocumentWrapper(document);
-        model.put("docWrapper", wrapper);
-
-        model.put("documentTypes", descriptions.entrySet());
-        model.put("searchCriteria", new SearchCriteria());
-        model.put("partners", partnerRepository.findAll());
-        model.put("products", productRepository.findAll());
-        model.put("storages", storageRepository.findAll());
-        model.put("action", "/documents/find");
-
+        System.err.println(document);
+        model.put("document", document);
+    //    model.put("searchCriteria", new SearchCriteria());
+    //    model.put("action", "/documents/find");
+        populateModel(model);
         return "documents/newDocumentSpring";
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.POST)
-    public String updateDocument(@PathVariable Integer id, DocumentWrapper wrapper) {
-        System.err.println("wrapper - " + wrapper.getDocument() + " details - " + wrapper.getDetails());
-        documentService.update(id, wrapper);
+    public String updateDocument(@PathVariable Integer id,
+                                 @Valid Document document,
+                                 Errors errors,
+                                 Map<String, Object> model) {
+        System.err.println("dto - " + document);
+        if (errors.hasErrors()) {
+            populateModel(model);
+            System.out.println(errors.getAllErrors());
+            return "documents/newDocumentSpring";
+        }
+        documentService.update(id, document);
         return "redirect:/" + DOCUMENTS_JSP_ATTRIBUTE;
     }
 
@@ -107,28 +113,21 @@ public class DocumentController {
         List<Document> orders = documentRepository.findAllByStatus(false);
         model.put(DOCUMENTS_JSP_ATTRIBUTE, orders);
         model.put(TITLE, "Заказы");
-        model.put("documentTypes", descriptions.entrySet());
         model.put("searchCriteria", new SearchCriteria());
-        model.put("partners", partnerRepository.findAll());
-        model.put("products", productRepository.findAll());
-        model.put("storages", storageRepository.findAll());
         model.put("action", "/documents/find");
+        populateModel(model);
         return DOCUMENTS_JSP_PATH;
     }
 
     @RequestMapping(value = "find", method = RequestMethod.GET)
     public String findDocuments(SearchCriteria criteria, Map<String, Object> model) {
-        System.out.println(criteria.getDocumentCriteria().getFrom() + " " + criteria.getDocumentCriteria().getTo() + " " + criteria.getDocumentCriteria().getDocumentTypes());
+        System.err.println(criteria.getDocumentCriteria().getFrom() + " " + criteria.getDocumentCriteria().getTo() + " " + criteria.getDocumentCriteria().getDocumentTypes());
         List<Document> documents = documentService.findAllByCriteria(criteria);
         model.put(TITLE, TITLE_VALUE);
         model.put(DOCUMENTS_JSP_ATTRIBUTE, documents);
-        model.put("documentTypes", descriptions.entrySet());
         model.put("searchCriteria", criteria);
-        model.put("partners", partnerRepository.findAll());
-        model.put("products", productRepository.findAll());
-        model.put("storages", storageRepository.findAll());
         model.put("action", "/documents/find");
-        System.out.println(documents);
+        populateModel(model);
         return DOCUMENTS_JSP_PATH;
     }
 
@@ -147,7 +146,7 @@ public class DocumentController {
 
     @RequestMapping(value = "new1", method = RequestMethod.POST)
     public @ResponseBody String addNewDocument(@RequestBody DocumentWrapper wrapper) {
-        System.out.println("wrapper - " + wrapper.getDocument() + " details - " + wrapper.getDetails());
+        System.out.println("dto - " + wrapper.getDocument() + " details - " + wrapper.getDetails());
         Document document = wrapper.getDocument();
         document.setDetails(wrapper.getDetails());
         documentRepository.save(document);
@@ -157,27 +156,91 @@ public class DocumentController {
     //    return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "new", method = RequestMethod.GET)
+    @RequestMapping(value = "new_", method = RequestMethod.GET)
     public String addNewDoc(Map<String, Object> model) {
-       // Document document = documentRepository.findOne(3);
-        DocumentWrapper wrapper = new DocumentWrapper(new Document(), Collections.singletonList(new DocumentDetail()));
-        model.put("docWrapper", wrapper);
-        model.put("products", productRepository.findAll());
-        model.put("documentTypes", descriptions.entrySet());
-        model.put("partners", partnerRepository.findAll());
-        model.put("storages", storageRepository.findAll());
+        Document document = new Document();
+        document.addDetail(new DocumentDetail());
+        model.put("document", document);
+        populateModel(model);
+
         return "documents/newDocumentSpring";
     }
 
-    @RequestMapping(value = "new", method = RequestMethod.POST)
-    public String addNewDoc(DocumentWrapper wrapper) {
-        System.out.println("wrapper - " + wrapper.getDocument() + " details - " + wrapper.getDetails());
-        Document document = wrapper.getDocument();
-        document.setDetails(wrapper.getDetails());
+    @RequestMapping(value = "new_", method = RequestMethod.POST)
+    public String addNewDoc(Map<String, Object> model, @Valid Document document, Errors errors) {
+        System.err.println("dto - " + document);
+        if (errors.hasErrors()) {
+            populateModel(model);
+            System.out.println(errors.getAllErrors());
+            return "documents/newDocumentSpring";
+        }
+
+
+
         documentRepository.save(document);
 
         return "redirect:/documents";
     }
+
+    @RequestMapping(value = "new", method = RequestMethod.GET)
+    public String newDocument(Map<String, Object> model) {
+        DocumentDTO documentForm = new DocumentDTO();
+        documentForm.addDetailForm(new DetailDTO());
+        populateModel(model);
+        model.put("document", documentForm);
+        return "documents/newDocumentSpring";
+    }
+
+    @RequestMapping(value = "new", method = RequestMethod.POST)
+    public String addNewDoc(Map<String, Object> model, @ModelAttribute("document") @Validated(MovementGroup.class) DocumentDTO form, Errors errors) {
+        System.err.println("dto - " + form);
+        if (errors.hasErrors()) {
+            populateModel(model);
+            System.out.println(errors.getAllErrors());
+            return "documents/newDocumentSpring";
+        }
+        //form = null;
+        documentService.save(form);
+
+        return "redirect:/documents";
+    }
+
+    @RequestMapping(value = {"in", "in/{id}"}, method = RequestMethod.POST)
+    public String newComingDocument(@PathVariable Optional<Integer> id, Map<String, Object> model, @ModelAttribute("document") @Validated(InGroup.class) DetailDTO dto, Errors errors) {
+        if (errors.hasErrors()) {
+            populateModel(model);
+            System.out.println(errors.getAllErrors());
+            return "documents/newDocumentSpring";
+        }
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = {"out", "out/{id}"}, method = RequestMethod.POST)
+    public String newOutDocument(@PathVariable Optional<Integer> id, Map<String, Object> model, @ModelAttribute("document") @Validated(OutGroup.class) DetailDTO dto, Errors errors) {
+        if (errors.hasErrors()) {
+            populateModel(model);
+            System.out.println(errors.getAllErrors());
+            return "documents/newDocumentSpring";
+        }
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = {"movement", "movement/{id}"}, method = RequestMethod.POST)
+    public String newMovementDocument(@PathVariable Optional<Integer> id, Map<String, Object> model, @ModelAttribute("document") @Validated(MovementGroup.class) DetailDTO dto, Errors errors) {
+        if (errors.hasErrors()) {
+            populateModel(model);
+            System.out.println(errors.getAllErrors());
+            return "documents/newDocumentSpring";
+        }
+
+        return "redirect:/";
+    }
+
+
+
+
+
+
 
     private Document.Type getDocumentType(String documentType) {
        return Document.Type
@@ -187,10 +250,15 @@ public class DocumentController {
     static {
         descriptions = new LinkedHashMap<Document.Type, String>() {{
                 put(Document.Type.PURCHASE, "Покупка");
-                put(Document.Type.REFUND, "Возврат");
                 put(Document.Type.SALE, "Продажа");
-                put(Document.Type.WRITEOFF, "Списание");
                 put(Document.Type.MOVEMENT, "Перемещение");
             }};
+    }
+
+    private void populateModel(Map<String, Object> model) {
+        model.put("partners", partnerRepository.findAll());
+        model.put("products", productRepository.findAll());
+        model.put("storages", storageRepository.findAll());
+        model.put("documentTypes", descriptions.entrySet());
     }
 }

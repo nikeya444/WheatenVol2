@@ -24,4 +24,11 @@ public class Storage extends PersistableObject {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Storage{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

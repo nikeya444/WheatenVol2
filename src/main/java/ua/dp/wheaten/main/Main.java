@@ -10,7 +10,7 @@ import ua.dp.wheaten.site.root.entities.DocumentDetail;
 
 
 import ua.dp.wheaten.site.root.entities.Product;
-import ua.dp.wheaten.site.root.entities.QDocument;
+//import ua.dp.wheaten.site.root.entities.QDocument;
 import ua.dp.wheaten.site.root.repositories.DocumentRepository;
 import ua.dp.wheaten.site.root.repositories.PartnerRepository;
 import ua.dp.wheaten.site.root.repositories.ProductRepository;
@@ -38,18 +38,18 @@ public class Main {
 
 
     public static void main(String[] args) {
-        testPredicate();
+        /*testPredicate();*/
     }
 
     static void predicateGraph() {
-        QDocument qDocument = QDocument.document;
+        /*QDocument qDocument = QDocument.document;
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(qDocument.status.eq(true));
         builder.and(qDocument.documentType.eq(Document.Type.PURCHASE));
         List<Document> documents = documentRepository.findAll(builder);
-        System.out.println(documents);
+        System.out.println(documents);      */
     }
-
+    /*
     static void testPredicate() {
         SearchCriteria criteria = new SearchCriteria();
         DocumentCriteria headCriteria = new DocumentCriteria();
@@ -182,5 +182,5 @@ public class Main {
         List<Document> documents = documentRepository.findAllByDateBetween(from, to);
         System.out.println(documents);
     }
-
+          */
 }

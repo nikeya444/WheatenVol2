@@ -100,8 +100,7 @@ public class Partner extends PersistableObjectAudit implements Convertable {
     @Override
     public String toString() {
         return "Partner{" +
-                "firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
+                "fullname='" + fullname + '\'' +
                 '}';
     }
 }

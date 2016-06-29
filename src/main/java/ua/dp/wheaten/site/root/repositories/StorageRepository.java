@@ -1,5 +1,6 @@
 package ua.dp.wheaten.site.root.repositories;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import ua.dp.wheaten.site.root.entities.Storage;
 
@@ -14,4 +15,7 @@ import java.util.List;
  */
 public interface StorageRepository extends CrudRepository<Storage, Integer> {
     List<Storage> findAll();
+    @Query(value = "select s.name from Storage s")
+    List<String> findAllNames();
+    Storage findByName(String name);
 }

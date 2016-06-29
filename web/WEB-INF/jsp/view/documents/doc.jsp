@@ -168,7 +168,7 @@
                              <div class="col-xs-4">
                                  <div class="row">
                                      <div class="col-xs-3 center-block"><c:out value="${document.partner.fullname}"/></div>
-                                     <div class="col-xs-2 center-block"><c:out value="${document.documentType}" /> </div>
+                                     <div class="col-xs-2 center-block"><c:out value="${document.type}" /> </div>
                                  </div>
                              </div>
                              <div class="col-xs-4">
