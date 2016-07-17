@@ -21,10 +21,10 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                        aria-haspopup="true" aria-expanded="false">Документы<span class="caret"></span> </a>
                     <ul class="dropdown-menu">
-                        <li><a href="<c:url value='/documents'/>">Документы</a> </li>
                         <li><a href="<c:url value='/documents/orders'/>">Заказы</a></li>
-                        <li><a href="<c:url value='/documents/incoming'/>">Входящие</a></li>
-                        <li><a href="<c:url value='/documents/movement'/>">Перемещения</a></li>
+                        <li><a href="<c:url value='/documents/purchase'/>">Входящие</a></li>
+                        <li><a href="<c:url value='/documents/sale'/>">Исходящие</a></li>
+                        <li><a href="<c:url value='/documents/movement'/>">Перемещения</a> </li>
                         <li role="separator" class="divider"></li>
                         <li><a href="<c:url value='/documents/new'/>">Создать</a> </li>
                     </ul>

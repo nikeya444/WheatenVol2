@@ -4,6 +4,8 @@ import org.springframework.validation.annotation.Validated;
 import ua.dp.wheaten.site.root.dto.DocumentDTO;
 import ua.dp.wheaten.site.root.entities.Document;
 import ua.dp.wheaten.site.root.entities.DocumentType;
+import ua.dp.wheaten.site.root.entities.PurchaseDetail;
+import ua.dp.wheaten.site.root.entities.PurchaseDocument;
 import ua.dp.wheaten.site.web.formobjects.SearchCriteria;
 
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.List;
 @Validated
 public interface DocumentService extends GenericService<Document, Integer> {
     void save(DocumentDTO dto);
-    List<Document> findByType(DocumentType type);
+
     void updateStatus(Integer id, boolean status);
     List<Document> findByDocumentTypeAndStatus(boolean status, Document.Type type);
     List<Document> findAllByCriteria(SearchCriteria searchCriteria);

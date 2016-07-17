@@ -55,6 +55,6 @@ public abstract class AbstractGenericService<T, ID extends Serializable>
 
     @Transactional
     public void update(ID key, T source) {
-
+        throw new UnsupportedOperationException("Update should be overriden");
     }
 }

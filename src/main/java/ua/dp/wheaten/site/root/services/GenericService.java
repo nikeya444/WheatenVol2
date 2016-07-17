@@ -21,4 +21,6 @@ public interface GenericService<T, ID extends Serializable> {
     public void saveList(List<T> list);
 
     public void delete(T object);
+
+    public void update(ID id, T object);
 }

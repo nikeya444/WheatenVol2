@@ -36,13 +36,13 @@
                                     <div class="form-group">
                                         <c:forEach items="${documentTypes}" var="documentType">
                                             <div class="checkbox">
-                                            <label>
+                                                <label>
 
-                                                <form:checkbox path="documentCriteria.documentTypes" value="${documentType.key}" checked="true"/>
+                                                    <form:checkbox path="documentCriteria.documentTypes" value="${documentType.key}" checked="true"/>
 
 
-                                                <c:out value="${documentType.value}" />
-                                            </label>
+                                                    <c:out value="${documentType.value}" />
+                                                </label>
                                             </div>
 
                                         </c:forEach>
@@ -72,20 +72,20 @@
                             <div class="row">
                                 <div class="col-xs-10">
                                     <div class="form-group">
-                                    <form:select path="detailCriteria.productIdList" cssClass="form-control">
-                                        <form:option value="-1" label="--- Все ---" />
-                                        <form:options items="${products}"  itemValue="id" itemLabel="name" />
-                                    </form:select>
+                                        <form:select path="detailCriteria.productIdList" cssClass="form-control">
+                                            <form:option value="-1" label="--- Все ---" />
+                                            <form:options items="${products}"  itemValue="id" itemLabel="name" />
+                                        </form:select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-10">
                                     <div class="form-group">
-                                    <form:select path="detailCriteria.storageIdList" cssClass="form-control">
-                                        <form:option value="-1" label="--- Все ---" />
-                                        <form:options items="${storages}"  itemValue="id" itemLabel="name" />
-                                    </form:select>
+                                        <form:select path="detailCriteria.storageIdList" cssClass="form-control">
+                                            <form:option value="-1" label="--- Все ---" />
+                                            <form:options items="${storages}"  itemValue="id" itemLabel="name" />
+                                        </form:select>
                                     </div>
                                 </div>
                             </div>
@@ -129,88 +129,63 @@
             </div>
             <div class="col-xs-9">
                 <div class="row">
-                <c:choose>
-                    <c:when test="${not empty documents}" >
-                <h3>Найдено <c:out value="${documents.size()}" /> документов</h3>
-        <!--        <div class="row">
-                    <div class="col-lg-6">
-                        <div class="row">
+                    <c:choose>
+                        <c:when test="${not empty documents}" >
+                            <h3>Найдено <c:out value="${documents.size()}" /> документов</h3>
+                            <!--        <div class="row">
+                            <div class="col-lg-6">
+                            <div class="row">
                             <div class="col-lg-3 center-block">Контрагент</div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="row">
+                            </div>
+                            </div>
+                            <div class="col-lg-4">
+                            <div class="row">
                             <div class="col-lg-4 center-block">Товар</div>
                             <div class="col-lg-2 center-block">Кол.,<br>шт</div>
                             <div class="col-lg-3 center-block">Сумма</div>
                             <div class="col-lg-3 center-block">Склад</div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">Итого</div>
-                </div>        -->
+                            </div>
+                            </div>
+                            <div class="col-lg-2">Итого</div>
+                            </div>        -->
 
-                    <c:set var="date" value="${documents.get(0).dateOfDocument}"/>
+                            <c:set var="date" value="${documents.get(0).dateOfDocument}"/>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading"><c:out value="${date}"/></div>
-                    <div class="panel-body">
-
-                    <c:forEach items="${documents}" var="document" varStatus="i">
-                    <c:if test="${!date.equals(document.dateOfDocument)}">
-                        <c:set var="date" value="${document.dateOfDocument}"/>
-                        </div></div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><c:out value="${date}" /></div>
+                            <div class="panel panel-default">
+                            <div class="panel-heading"><c:out value="${date}"/></div>
                             <div class="panel-body">
-                    </c:if>
 
-                        <div class="row">
-                             <div class="col-xs-4">
-                                 <div class="row">
-                                     <div class="col-xs-3 center-block"><c:out value="${document.partner.fullname}"/></div>
-                                     <div class="col-xs-2 center-block"><c:out value="${document.type}" /> </div>
-                                 </div>
-                             </div>
-                             <div class="col-xs-4">
-                                    <c:set var="sum" value="${0}"/>
-                                    <c:forEach items="${document.details}" var="detail">
-                                        <div class="row">
-                                            <div class="col-lg-4 center-block"><c:out value="${detail.product.name}"/></div>
-                                            <div class="col-lg-2 center-block"><c:out value="${detail.quantity}"/></div>
-                                            <div class="col-lg-3 center-block"><c:out value="${detail.sum}"/></div>
-                                            <div class="col-lg-3 center-block"><c:out value="${detail.storage.name}"/></div>
-                                        </div>
-                                    <c:set var="sum" value="${sum + detail.sum}"/>
-                                    </c:forEach>
-                             </div>
-                             <div class="col-xs-2"><c:out value="${sum}"/></div>
-                             <div class="col-xs-1">
-                                 <div class="row">
-                                     <c:if test="${!document.status}">
-                                         <div class="col-xs-1">
-                                             <form action="<c:out value="${document.id}" />/todocument" method="post">
-                                                 <button class="btn btn-primary">Провести</button>
-                                             </form>
-                                         </div>
-                                         <div class="col-xs-1">
-                                            <form action="<c:out value="${document.id}"/>" method="get">
-                                                <button class="btn btn-default">Редактировать</button>
-                                            </form>
-                                         </div>
-                                     </c:if>
-                                 </div>
-                             </div>
-                        </div>
+                            <c:forEach items="${documents}" var="document" varStatus="i">
+                                <c:if test="${!date.equals(document.dateOfDocument)}">
+                                    <c:set var="date" value="${document.dateOfDocument}"/>
+                                    </div></div>
+                                    <div class="panel panel-default">
+                                    <div class="panel-heading"><c:out value="${date}" /></div>
+                                    <div class="panel-body">
+                                </c:if>
 
-                </c:forEach>
-                </div></div>
-                </c:when>
-                <c:otherwise>
-                    <h3>Найдено 0 документов</h3>
-                </c:otherwise>
-            </c:choose>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <c:forEach items="${document.details}" var="detail">
+                                            <div class="row">
+                                                <div class="col-lg-4 center-block"><c:out value="${detail.product.name}"/></div>
+                                                <div class="col-lg-2 center-block"><c:out value="${detail.quantity}"/></div>
+                                                <div class="col-lg-3 center-block"><c:out value="${detail.source.name}"/></div>
+                                                <div class="col-lg-3 center-block"><c:out value="${detail.destination.name}"/></div>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                </div>
+
+                            </c:forEach>
+                            </div></div>
+                        </c:when>
+                        <c:otherwise>
+                            <h3>Найдено 0 документов</h3>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
-        </div>
         <script type="text/javascript">
             $(function () {
                 //Инициализация datetimepicker8 и datetimepicker9

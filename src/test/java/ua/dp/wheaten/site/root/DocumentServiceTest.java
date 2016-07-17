@@ -24,7 +24,7 @@ public class DocumentServiceTest extends AbstractIntegrationTest {
     @Inject
     DocumentService documentService;
 
-    @Test
+
     @Rollback(value = false)
     public void testUpdate() {
         DocumentDetail detail = new DocumentDetail(productRepository.findOne(1), 100, new BigDecimal(20000), storageRepository.findOne(1));
@@ -42,7 +42,7 @@ public class DocumentServiceTest extends AbstractIntegrationTest {
 
     }
 
-    @Test
+
     @Rollback(value = false)
     public void testCreate() {
         DocumentDetail detail = new DocumentDetail(productRepository.findOne(2), 50, new BigDecimal(9500), storageRepository.findOne(1));
@@ -51,13 +51,13 @@ public class DocumentServiceTest extends AbstractIntegrationTest {
         System.err.println(document.getId());
     }
 
-    @Test
+
     @Rollback(value = false)
     public void testDelete() {
         documentService.delete(5);
     }
 
-    @Test
+
     public void testRead() {
         Document document = documentService.getOne(1);
         Assert.assertEquals(2, document.getDetails().size());

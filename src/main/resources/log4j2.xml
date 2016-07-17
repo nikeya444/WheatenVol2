@@ -25,6 +25,7 @@
         <logger name="org.apache" level="info" />
         <logger name="org.hibernate" level="info" />
         <logger name="org.hibernate.SQL" level="debug" />
+        <logger name="org.hibernate.stat" level="info" />
         <logger name="org.hibernate.type" level="info" />
         <logger name="org.springframework" level="info" />
     </loggers>

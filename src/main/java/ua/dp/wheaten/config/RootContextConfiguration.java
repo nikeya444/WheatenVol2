@@ -45,14 +45,14 @@ public class RootContextConfiguration {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+      /*  DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUsername("root");
         dataSource.setPassword("");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/wheaten_one_document");
-      /*  JndiDataSourceLookup lookup = new JndiDataSourceLookup();
-        return lookup.getDataSource("jdbc/wheaten_doc_1");*/
-        return dataSource;
+        dataSource.setUrl("jdbc:mysql://localhost:3306/wheaten_final");      */
+        JndiDataSourceLookup lookup = new JndiDataSourceLookup();
+        return lookup.getDataSource("jdbc/wheaten_final");
+      //  return dataSource;
     }
 
     @Bean
@@ -64,10 +64,11 @@ public class RootContextConfiguration {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         Map<String, Object> properties = new Hashtable<>();
-        properties.put("javax.persistence.schema-generation.database.action",
-                "none");
+     //   properties.put("javax.persistence.schema-generation.database.action",
+     //           "none");
      //   properties.put("hibernate.show_sql", "true");
-
+     //   properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.generate_statistics", "true");
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         adapter.setDatabasePlatform("org.hibernate.dialect.MySQL5InnoDBDialect");
 

@@ -12,7 +12,7 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @MappedSuperclass
-@Access(AccessType.FIELD)
+
 public abstract class PersistableObjectAudit extends PersistableObject {
     @Column(name = "INSERT_TS")
     private LocalDateTime insertTimestamp;

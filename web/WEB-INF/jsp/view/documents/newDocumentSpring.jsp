@@ -4,15 +4,6 @@
       <form:form role="form" modelAttribute="document" id="documentForm">
         <div id="docHead">
           <div class="row">
-            <div class="col-lg-4 col-xs-8">
-              <form:select path="type" cssClass="form-control input-sm" id="operation" >
-                <option>Тип операции</option>
-                <form:options items="${documentTypes}" itemValue="key" itemLabel="value" />
-              </form:select>
-              <form:errors path="type" cssClass="errors" />
-
-
-            </div>
             <div class="col-xs-4">
               <div class="form-group">
                 <div class="input-group date" id="datetimepicker">
@@ -33,13 +24,6 @@
                   <form:options items="${partners}" itemValue="id" itemLabel="fullname"/>
               </form:select>
               <form:errors path="partner" cssClass="errors"/>
-            </div>
-            <div class="col-xs-4">
-                <div class="checkbox">
-                    <label>
-                        <form:checkbox path="status" /> Провести
-                    </label>
-                </div>
             </div>
           </div>
         </div>
@@ -71,13 +55,6 @@
                       <form:options items="${storages}" itemValue="id" itemLabel="name" />
                   </form:select>
                   <form:errors path="details[${i.index}].storage" cssClass="errors" />
-              </div>
-              <div class="col-xs-2">
-                  <form:select path="details[${i.index}].storage2"  cssClass="form-control input-sm" id="storage">
-                      <option value="0">Склад</option>
-                      <form:options items="${storages}" itemValue="id" itemLabel="name" />
-                  </form:select>
-                  <form:errors path="details[${i.index}].storage2" cssClass="errors" />
               </div>
               <div class="col-xs-2">
                 <form:input path="details[${i.index}].quantity" cssClass="form-control input-sm" />
@@ -114,58 +91,26 @@
 
 
       $('#add').click(function() {
-        if ($('#operation').val() == "MOVEMENT") {
             append();
-        } else {
-            append();
-        }
-      //  records.append('<div class="row data">' + rTableRow + '<div class="col-xs-1"><a href="javascript:void(0)" onclick="delRecord();" style="float: right"><span class="glyphicon glyphicon-remove"></span></a><br></div></div>');
-      });
+        });
+      //  records.append('<div class="row data">' + rTableRow + '<div class="col-xs-1"><a href="javascript:void(0)" onclick="delRecord();" style="float: right"><span class="glyphicon glyphicon-remove"></span></a><br></div></div
 
-      var action = "/documents";
 
-      $('#operation').on('change', function() {
 
-          var selected_type = $(this).children(":selected").val();
 
-          switch (selected_type) {
-              case "PURCHASE":
-                  $("#documentForm").attr('action', action + '/in');
-                  break;
-              case "SALE":
-                  $("#documentForm").attr('action', action + '/out');
-                  break;
-              case "MOVEMENT":
-                  $("#documentForm").attr('action', action + '/movement');
-          }
-        if ("MOVEMENT" == this.value) {
-            records.empty();
-            i = -1;
-            append();
-        } else {
-            if (i > 0) {
-                records.empty();
-                i = -1;
-                append();
-            }
-        }
-      });
-
-        function append() {
-            i++;
-            records.append('<div class="row data" id="dataRow' + i + '">' +
-            '<div class="col-xs-3">' +
-            '<select id="details' + i +'.product" name="details[' + i + '].product" class="form-control input-sm"><option value="1">Картон 10</option><option value="2">Миндаль</option><option value="3">Шоколад</option><option value="4">Ром-карамель</option><option value="5">Чернослив</option><option value="6">Вишня</option></select></div>' +
-            '<div class="col-xs-2">' +
-            '<select id="details' + i + '.storage" name="details[' + i + '].storage" class="form-control input-sm"><option value="0">Склад</option><option value="1">Тольяти</option><option value="2">Космос</option></select></div>' +
-            '<div class="col-xs-2">' +
-            '<select id="details' + i + '.storage2" name="details[' + i + '].storage2" class="form-control input-sm"><option value="0">Склад</option><option value="1">Тольяти</option><option value="2">Космос</option></select></div>' +
-            '<div class="col-xs-2">' +
-            '<input id="details' + i + '.quantity" name="details[' + i + '].quantity" class="form-control input-sm quantityInput" type="text" value=""/></div>' +
-            '<div class="col-xs-2">' +
-            '<input id="details' + i + '.sum" name="details[' + i + '].sum" class="form-control input-sm priceInput" type="text" value=""/></div>' +
-            '</div>');
-        }
+      function append() {
+          i++;
+          records.append('<div class="row data" id="dataRow' + i + '">' +
+          '<div class="col-xs-3">' +
+          '<select id="details' + i +'.product" name="details[' + i + '].product" class="form-control input-sm"><option value="1">Картон 10</option><option value="2">Миндаль</option><option value="3">Шоколад</option><option value="4">Ром-карамель</option><option value="5">Чернослив</option><option value="6">Вишня</option></select></div>' +
+          '<div class="col-xs-2">' +
+          '<select id="details' + i + '.storage" name="details[' + i + '].storage" class="form-control input-sm"><option value="0">Склад</option><option value="1">Тольяти</option><option value="2">Космос</option></select></div>' +
+          '<div class="col-xs-2">' +
+          '<input id="details' + i + '.quantity" name="details[' + i + '].quantity" class="form-control input-sm quantityInput" type="text" value=""/></div>' +
+          '<div class="col-xs-2">' +
+          '<input id="details' + i + '.sum" name="details[' + i + '].sum" class="form-control input-sm priceInput" type="text" value=""/></div>' +
+          '</div>');
+      }
     </script>
     </jsp:attribute>
 </template:main>

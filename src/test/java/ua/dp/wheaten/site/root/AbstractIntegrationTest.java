@@ -19,10 +19,10 @@ import javax.transaction.Transactional;
 
 /**
  * Created by kkm on 18.01.2016.
- */
+ */  /*
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = RootContextConfiguration.class)
-@Transactional
+@Transactional      */
 public abstract class AbstractIntegrationTest {
 
     @Resource(name = "dataSource")

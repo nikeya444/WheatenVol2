@@ -3,19 +3,19 @@ package ua.dp.wheaten.main;
 import com.mysema.query.BooleanBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import ua.dp.wheaten.config.RootContextConfiguration;
 import ua.dp.wheaten.site.root.dto.Remnant;
-import ua.dp.wheaten.site.root.entities.Document;
-import ua.dp.wheaten.site.root.entities.DocumentDetail;
+import ua.dp.wheaten.site.root.entities.*;
 
 
-import ua.dp.wheaten.site.root.entities.Product;
 //import ua.dp.wheaten.site.root.entities.QDocument;
 import ua.dp.wheaten.site.root.repositories.DocumentRepository;
 import ua.dp.wheaten.site.root.repositories.PartnerRepository;
 import ua.dp.wheaten.site.root.repositories.ProductRepository;
 import ua.dp.wheaten.site.root.repositories.StorageRepository;
 import ua.dp.wheaten.site.root.services.DocumentService;
+import ua.dp.wheaten.site.root.services.PurchaseService;
 import ua.dp.wheaten.site.web.formobjects.DetailCriteria;
 import ua.dp.wheaten.site.web.formobjects.DocumentCriteria;
 import ua.dp.wheaten.site.web.formobjects.SearchCriteria;
@@ -29,16 +29,30 @@ import java.util.List;
  * Created by kkm on 25.01.2016.
  */
 public class Main {
-    static ApplicationContext applicationContext = new AnnotationConfigApplicationContext(RootContextConfiguration.class);
-    static DocumentService documentService = applicationContext.getBean(DocumentService.class);
-    static DocumentRepository documentRepository = applicationContext.getBean(DocumentRepository.class);
-    static ProductRepository productRepository = applicationContext.getBean(ProductRepository.class);
-    static PartnerRepository partnerRepository = applicationContext.getBean(PartnerRepository.class);
-    static StorageRepository storageRepository = applicationContext.getBean(StorageRepository.class);
 
+    static PurchaseService documentService;
+    static DocumentRepository documentRepository;
+    static ProductRepository productRepository;
+    static PartnerRepository partnerRepository;
+    static StorageRepository storageRepository;
+
+    static {
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(RootContextConfiguration.class);
+
+        documentService = applicationContext.getBean(PurchaseService.class);
+        documentRepository = applicationContext.getBean(DocumentRepository.class);
+        productRepository = applicationContext.getBean(ProductRepository.class);
+        partnerRepository = applicationContext.getBean(PartnerRepository.class);
+        storageRepository = applicationContext.getBean(StorageRepository.class);
+    }
 
     public static void main(String[] args) {
-        /*testPredicate();*/
+        Partner partner = partnerRepository.findOne(1);
+        //System.out.println(partner);
+        for (Phone phone: partner.getPhones()) {
+            System.err.println(phone.getId());
+        }
+
     }
 
     static void predicateGraph() {

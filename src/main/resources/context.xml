@@ -5,5 +5,5 @@
           username="root" password=""
           driverClassName="com.mysql.jdbc.Driver"
           defaultTransactionIsolation="READ_COMMITTED"
-          url="jdbc:mysql://localhost/wheaten_one_document" />
+          url="jdbc:mysql://localhost/wheaten_final" />
 </Context>

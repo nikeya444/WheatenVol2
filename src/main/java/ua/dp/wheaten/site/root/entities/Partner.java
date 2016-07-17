@@ -36,7 +36,7 @@ public class Partner extends PersistableObjectAudit implements Convertable {
     @Column(name = "FULLNAME")
     private String fullname;
 
-    @OneToMany(mappedBy = "partner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "partner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Phone> phones = new LinkedList<>();
 
     public Partner() {
@@ -73,6 +73,7 @@ public class Partner extends PersistableObjectAudit implements Convertable {
     public void setFullname(String fullname) {
         this.fullname = fullname;
     }
+
 
     public List<Phone> getPhones() {
         return phones;
